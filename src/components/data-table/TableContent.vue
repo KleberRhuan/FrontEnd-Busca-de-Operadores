@@ -27,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineComponent, h, markRaw } from 'vue';
+import { defineComponent, h, markRaw, computed } from 'vue';
 import { TableBody, TableCell, TableRow } from '@/components/ui/table/index';
 import { Loader2Icon } from 'lucide-vue-next';
 
@@ -46,10 +46,18 @@ const props = defineProps<{
   columns: TableColumn[];
   items: DataItem[];
   loading: boolean;
-  gridTemplateColumnsStyle: string;
-  minColumnWidth: number;
+  empty?: boolean;
+  minColumnWidth?: number;
   formatters?: Record<string, (value: any) => string>;
 }>();
+
+// Definir valores padrão para props opcionais
+const minColumnWidth = props.minColumnWidth || 140;
+
+// Computed para grid de colunas - responsivo horizontal
+const gridTemplateColumnsStyle = computed(() => {
+  return `grid-template-columns: repeat(${props.columns.length}, minmax(${minColumnWidth}px, 1fr))`;
+});
 
 // Cache para formatação de valores
 const formatCache = new Map();

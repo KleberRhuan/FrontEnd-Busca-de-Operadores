@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import DataTable from "@/components/data-table/DataTable.vue";
+import { columns } from '@/app/utils/columns'
+import { fetchOperators } from '@/app/services/operatorService'
 
 onMounted(() => {
   document.body.className = 'antialiased dark bg-black'
@@ -20,7 +22,12 @@ onMounted(() => {
       <div class="relative z-10 flex-grow mb-6 w-full">
         <div class="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-2xl blur-3xl opacity-50 -z-10"></div>
         <div class="bg-black/20 backdrop-blur-xl p-6 rounded-2xl border border-white/10 shadow-2xl h-full flex flex-col w-full">
-          <DataTable />
+          <DataTable 
+            :fetch-fn="fetchOperators"
+            :columns="columns"
+            persist-key="operator-table"
+            :default-page-size="10"
+          />
         </div>
       </div>
       

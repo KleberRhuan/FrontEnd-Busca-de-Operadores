@@ -1,89 +1,100 @@
-import type { ColumnDef } from '@tanstack/vue-table'
-import type { OperatorRecord } from '@/app/types/OperatorRecord.ts'
+import type { ColumnDefinition } from '@/app/composables/useTableColumns'
 
-export const operatorRecordColumns: ColumnDef<OperatorRecord>[] = [
+export const columns: ColumnDefinition[] = [
   {
-    accessorKey: 'registration',
-    header: 'Registration'
+    id: 'registration',
+    title: 'Registro',
+    sortable: true,
+    visible: true
   },
   {
-    accessorKey: 'cnpj',
-    header: 'CNPJ'
+    id: 'cnpj',
+    title: 'CNPJ',
+    sortable: true,
+    visible: true
   },
   {
-    accessorKey: 'businessName',
-    header: 'Business Name'
+    id: 'businessName',
+    title: 'Razão Social',
+    sortable: true,
+    visible: true
   },
   {
-    accessorKey: 'tradeName',
-    header: 'Trade Name'
+    id: 'tradeName',
+    title: 'Nome Fantasia',
+    sortable: true,
+    visible: true
   },
   {
-    accessorKey: 'modality',
-    header: 'Modality'
+    id: 'modality',
+    title: 'Modalidade',
+    sortable: true,
+    visible: true
   },
   {
-    accessorKey: 'street',
-    header: 'Street'
+    id: 'street',
+    title: 'Rua',
+    sortable: true,
+    visible: false
   },
   {
-    accessorKey: 'number',
-    header: 'Number'
+    id: 'number',
+    title: 'Número',
+    sortable: false,
+    visible: false
   },
   {
-    accessorKey: 'complement',
-    header: 'Complement'
+    id: 'complement',
+    title: 'Complemento',
+    sortable: false,
+    visible: false
   },
   {
-    accessorKey: 'neighborhood',
-    header: 'Neighborhood'
+    id: 'neighborhood',
+    title: 'Bairro',
+    sortable: true,
+    visible: false
   },
   {
-    accessorKey: 'city',
-    header: 'City'
+    id: 'city',
+    title: 'Cidade',
+    sortable: true,
+    visible: true
   },
   {
-    accessorKey: 'state',
-    header: 'State'
+    id: 'state',
+    title: 'Estado',
+    sortable: true,
+    visible: true
   },
   {
-    accessorKey: 'postalCode',
-    header: 'Postal Code'
+    id: 'postalCode',
+    title: 'CEP',
+    sortable: false,
+    visible: false
   },
   {
-    accessorKey: 'areaCode',
-    header: 'Area Code'
+    id: 'phone',
+    title: 'Telefone',
+    sortable: false,
+    visible: true
   },
   {
-    accessorKey: 'phone',
-    header: 'Phone'
+    id: 'email',
+    title: 'Email',
+    sortable: true,
+    visible: true
   },
   {
-    accessorKey: 'fax',
-    header: 'Fax'
+    id: 'representative',
+    title: 'Representante',
+    sortable: true,
+    visible: true
   },
   {
-    accessorKey: 'email',
-    header: 'Email'
-  },
-  {
-    accessorKey: 'representative',
-    header: 'Representative'
-  },
-  {
-    accessorKey: 'representativePosition',
-    header: 'Representative Position'
-  },
-  {
-    accessorKey: 'marketingRegion',
-    header: 'Marketing Region'
-  },
-  {
-    accessorKey: 'registrationDate',
-    header: 'Registration Date',
-    cell: ({ row }) => {
-      const dateValue = row.getValue('registrationDate') as string | number;
-      return new Date(dateValue).toLocaleDateString();
-    }
-  },
+    id: 'registrationDate',
+    title: 'Data de Registro',
+    sortable: true,
+    visible: true
+  }
 ]

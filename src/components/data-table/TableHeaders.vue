@@ -45,10 +45,17 @@ interface SortConfig {
 
 const props = defineProps<{
   columns: Column[];
-  gridTemplateColumnsStyle: string;
   sortConfig: SortConfig;
-  minColumnWidth: number;
+  minColumnWidth?: number;
 }>();
+
+// Definir valores padrão para props opcionais
+const minColumnWidth = props.minColumnWidth || 140;
+
+// Computed para grid de colunas - responsivo horizontal
+const gridTemplateColumnsStyle = computed(() => {
+  return `grid-template-columns: repeat(${props.columns.length}, minmax(${minColumnWidth}px, 1fr))`;
+});
 
 const emit = defineEmits<{
   (e: 'sort', field: string): void;
