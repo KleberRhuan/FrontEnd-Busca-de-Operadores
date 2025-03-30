@@ -1,181 +1,126 @@
-# Sistema de Cadastro de Operadores
+# Cadastro de Operadores
 
-Aplicação Vue.js para visualização, pesquisa e gerenciamento de operadoras de saúde, com interface moderna e responsiva.
+![Vue.js](https://img.shields.io/badge/Vue.js-4FC08D?style=for-the-badge&logo=vue.js&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
 
-![Screenshot da Aplicação](./docs/screenshot.png)
+Sistema de visualização e pesquisa de operadores com interface moderna e responsiva.
 
-## Características
+## Funcionalidades
 
-- 🔍 **Busca instantânea** com debounce de digitação
-- 📱 **Interface responsiva** que funciona em dispositivos móveis e desktop
-- 🔄 **Ordenação avançada** por todos os campos disponíveis
-- 📊 **Paginação eficiente** com controle de tamanho de página
-- 🎨 **Design moderno** com tema escuro e efeitos visuais
-- 🚀 **Alto desempenho** com otimizações de renderização
-- 💾 **Persistência de preferências** do usuário para configurações de tabela
+- **Visualização de operadores**: Interface tabulada com dados organizados
+- **Paginação avançada**: Navegação intuitiva entre registros
+- **Ordenação flexível**: Organização dos dados por qualquer coluna
+- **Pesquisa eficiente**: Filtragem rápida por termos de busca
+- **Design responsivo**: Adaptação automática a qualquer dispositivo
+- **Tratamento de erros**: Mensagens amigáveis em português para erros de rede e API
 
 ## Tecnologias
 
-- **Vue 3** com Composition API
-- **TypeScript** para tipagem estática
-- **Vite** para desenvolvimento rápido
-- **Axios** para comunicação com API
-- **Tailwind CSS** para estilização
-- **Vue Use** para composables utilitários
-- **Lucide Icons** para ícones vetoriais
+- **Vue 3**: Framework progressivo para construção de interfaces
+- **TypeScript**: Tipagem estática para maior confiabilidade
+- **Tailwind CSS**: Framework CSS utilitário para estilização eficiente
+- **Vite**: Build tool rápida para desenvolvimento moderno
+- **Headless UI**: Componentes acessíveis sem estilos predefinidos
+- **TanStack Table**: Biblioteca poderosa para controle de tabelas
+- **Docker**: Containerização para implantação consistente
 
-## Arquitetura
+## Pré-requisitos
 
-O projeto segue uma arquitetura baseada em componentes com separação clara de responsabilidades:
-
-### Camadas Principais
-
-1. **Composables** - Lógica reutilizável (hooks)
-2. **Serviços** - Comunicação com API e processamento de dados
-3. **Componentes** - Interface do usuário
-4. **Tipos** - Definições de tipos TypeScript
-
-### Fluxo de Dados
-
-O fluxo de dados da aplicação segue o seguinte caminho:
-
-```
-[API Backend] <---> [Serviços] <---> [Composables] <---> [Componentes UI]
-```
-
-### Estrutura de Arquivos
-
-```
-src/
-├── app/                 # Lógica da aplicação
-│   ├── composables/     # Hooks reutilizáveis
-│   ├── config/          # Configurações
-│   ├── services/        # Serviços (API, etc)
-│   ├── types/           # Definições de tipos
-│   ├── utils/           # Utilitários
-│   └── styles/          # Estilos globais
-├── components/          # Componentes da UI
-│   ├── data-table/      # Componentes da tabela de dados
-│   └── ui/              # Componentes UI básicos
-├── lib/                 # Bibliotecas/utilitários
-└── App.vue              # Componente raiz
-```
-
-## Integração com API
-
-A aplicação se integra com uma API RESTful para buscar dados de operadoras. Os principais parâmetros suportados são:
-
-- `query` - Texto de busca (mínimo 2 caracteres)
-- `page` - Número da página (começa em 1)
-- `page_size` - Quantidade de resultados por página
-- `order_by` - Campo para ordenação
-- `order_direction` - Direção da ordenação (`asc` ou `desc`)
-
-## Tipos e Enums
-
-O sistema utiliza TypeScript com tipos fortemente definidos:
-
-- `ApiField` - Enum para campos da API
-- `FrontendField` - Enum para campos do frontend
-- `SortDirection` - Enum para direções de ordenação
-- `ApiOperator` - Interface para dados da operadora da API
-- `OperatorRecord` - Interface para dados da operadora no frontend
-
-## Funcionalidades Principais
-
-### DataTable
-
-Componente principal que orquestra a exibição de dados tabulares com:
-
-- Cabeçalhos clicáveis para ordenação
-- Paginação com navegação intuitiva
-- Campo de busca para filtrar dados
-- Indicadores de carregamento
-- Estados vazios para resultados não encontrados
-
-### Ordenação
-
-Sistema de ordenação que:
-
-- Alterna entre ordenação ascendente e descendente
-- Sincroniza estado com a API
-- Exibe indicadores visuais da ordenação atual
-
-### Busca
-
-Campo de busca inteligente que:
-
-- Implementa debounce para reduzir chamadas à API
-- Valida comprimento mínimo da busca
-- Exibe feedback visual durante a busca
-
-## Configuração do Projeto
-
-### Requisitos
-
-- Node.js 16+
+- Node.js (v18 ou superior)
 - npm ou yarn
+- Docker (opcional, para execução em container)
 
-### Instalação
+## Instalação
 
-```sh
-# Instalar dependências
+```bash
+# Clone o repositório
+git clone [url-do-repositorio]
+cd intuitive-care
+
+# Instale as dependências
 npm install
 
-# Compilar e iniciar servidor de desenvolvimento
-npm run dev
+# Configure as variáveis de ambiente
+cp .env.example .env
+# Edite o arquivo .env com suas configurações
+```
 
-# Verificar tipos, compilar e minificar para produção
+## Desenvolvimento
+
+```bash
+# Inicie o servidor de desenvolvimento
+npm run dev
+```
+
+## Build para produção
+
+```bash
+# Compile e minifique para produção
 npm run build
 
-# Executar linter
-npm run lint
+# Visualize a build
+npm run preview
 ```
 
-### Variáveis de Ambiente
+## Execução com Docker
 
-Crie um arquivo `.env.local` na raiz do projeto com as seguintes variáveis:
+Para instruções detalhadas sobre a execução com Docker, consulte o arquivo [DOCKER.md](./DOCKER.md).
 
-```sh
-VITE_API_URL=http://sua-api-url.com
+Resumidamente:
+
+```bash
+# Método 1: Usando o script de automatização
+chmod +x docker-build.sh
+./docker-build.sh
+
+# Método 2: Usando npm scripts
+npm run docker:build  # Para construir a imagem
+npm run docker:run    # Para executar o container
+npm run docker        # Para fazer ambos
 ```
 
-## Componentes UI
+## Estrutura do Projeto
 
-### Table
+```
+intuitive-care/
+├── src/
+│   ├── app/               # Lógica da aplicação
+│   │   ├── composables/   # Composables Vue reutilizáveis
+│   │   ├── config/        # Configurações
+│   │   ├── types/         # Tipos e interfaces TypeScript
+│   │   └── utils/         # Utilitários
+│   ├── components/        # Componentes Vue
+│   │   ├── data-table/    # Componentes da tabela de dados
+│   │   └── ui/            # Componentes de UI reutilizáveis
+│   └── lib/               # Bibliotecas e integrações
+├── public/                # Arquivos públicos
+├── dist/                  # Build de produção gerada pelo Vite
+├── Dockerfile             # Configuração para build do container
+├── nginx.conf             # Configuração do Nginx para servir a aplicação
+├── docker-build.sh        # Script para automatizar build do container
+└── ...
+```
 
-Componente de tabela altamente personalizável com:
+## Documentação
 
-- `TableHeader` - Cabeçalho da tabela
-- `TableBody` - Corpo da tabela
-- `TableRow` - Linha da tabela
-- `TableCell` - Célula da tabela
-- `TableHead` - Célula de cabeçalho
-
-### TableControls
-
-Barra de controles com:
-
-- Campo de busca
-- Botão de atualização
-- Indicador de carregamento
-
-### PaginationControls
-
-Controles de paginação com:
-
-- Navegação por páginas
-- Seletor de tamanho de página
-- Indicador de resultados
+- [DEPLOY.md](./DEPLOY.md) - Instruções detalhadas para deploy em produção
+- [DOCKER.md](./DOCKER.md) - Guia para utilização com Docker
 
 ## Contribuição
 
 1. Faça um fork do projeto
-2. Crie uma branch para sua feature (`git checkout -b feature/nova-feature`)
-3. Faça commit das alterações (`git commit -m 'Adiciona nova feature'`)
-4. Faça push para a branch (`git push origin feature/nova-feature`)
+2. Crie sua branch de feature (`git checkout -b feature/amazing-feature`)
+3. Commit suas mudanças (`git commit -m 'Add some amazing feature'`)
+4. Push para a branch (`git push origin feature/amazing-feature`)
 5. Abra um Pull Request
 
 ## Licença
 
-[MIT](LICENSE.md)
+Este projeto está licenciado sob a licença MIT - veja o arquivo LICENSE para detalhes.
+
+## Contato
+
+Kleber Rhuan - [GitHub](https://github.com/seuusuario)
