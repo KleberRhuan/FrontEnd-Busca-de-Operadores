@@ -28,16 +28,11 @@ export interface DataTableOptions<T> {
   persistKey?: string
   defaultPageSize?: number
   globalDebounce?: number
-  initialSort?: { field: SortableFields; direction: SortDirection }
-  sortable?: Record<string, boolean>
-  initialItemsPerPage?: number
-  itemsPerPageOptions?: number[]
-  refetchOnOptionsChange?: boolean
 }
 
 export interface SortConfig {
-  field: SortableFields | null
-  order: SortDirection | null
+  sortField: SortableFields | null
+  sortDirection: SortDirection | null
 }
 
 export interface PaginationState {
