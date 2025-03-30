@@ -28,3 +28,13 @@ coverage
 *.sw?
 
 *.tsbuildinfo
+
+# Arquivos de ambiente (exceto exemplos)
+.env
+.env.*
+!.env.example
+
+# Docker
+*.tar
+*.tar.gz
+docker-compose.override.yml
