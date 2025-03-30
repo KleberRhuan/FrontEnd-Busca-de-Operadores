@@ -1,0 +1,1849 @@
+diff --git a/.gitignore b/.gitignore
+index 8ee54e8..83d76c5 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -28,3 +28,13 @@ coverage
+ *.sw?
+ 
+ *.tsbuildinfo
++
++# Arquivos de ambiente (exceto exemplos)
++.env
++.env.*
++!.env.example
++
++# Docker
++*.tar
++*.tar.gz
++docker-compose.override.yml
+diff --git a/README.md b/README.md
+index 6ebfb0a..192a17f 100644
+--- a/README.md
++++ b/README.md
+@@ -1,181 +1,126 @@
+-# Sistema de Cadastro de Operadores
++# Cadastro de Operadores
+ 
+-Aplicação Vue.js para visualização, pesquisa e gerenciamento de operadoras de saúde, com interface moderna e responsiva.
++![Vue.js](https://img.shields.io/badge/Vue.js-4FC08D?style=for-the-badge&logo=vue.js&logoColor=white)
++![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
++![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
++![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)
++![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+ 
+-![Screenshot da Aplicação](./docs/screenshot.png)
++Sistema de visualização e pesquisa de operadores com interface moderna e responsiva.
+ 
+-## Características
++## Funcionalidades
+ 
+-- 🔍 **Busca instantânea** com debounce de digitação
+-- 📱 **Interface responsiva** que funciona em dispositivos móveis e desktop
+-- 🔄 **Ordenação avançada** por todos os campos disponíveis
+-- 📊 **Paginação eficiente** com controle de tamanho de página
+-- 🎨 **Design moderno** com tema escuro e efeitos visuais
+-- 🚀 **Alto desempenho** com otimizações de renderização
+-- 💾 **Persistência de preferências** do usuário para configurações de tabela
++- **Visualização de operadores**: Interface tabulada com dados organizados
++- **Paginação avançada**: Navegação intuitiva entre registros
++- **Ordenação flexível**: Organização dos dados por qualquer coluna
++- **Pesquisa eficiente**: Filtragem rápida por termos de busca
++- **Design responsivo**: Adaptação automática a qualquer dispositivo
++- **Tratamento de erros**: Mensagens amigáveis em português para erros de rede e API
+ 
+ ## Tecnologias
+ 
+-- **Vue 3** com Composition API
+-- **TypeScript** para tipagem estática
+-- **Vite** para desenvolvimento rápido
+-- **Axios** para comunicação com API
+-- **Tailwind CSS** para estilização
+-- **Vue Use** para composables utilitários
+-- **Lucide Icons** para ícones vetoriais
++- **Vue 3**: Framework progressivo para construção de interfaces
++- **TypeScript**: Tipagem estática para maior confiabilidade
++- **Tailwind CSS**: Framework CSS utilitário para estilização eficiente
++- **Vite**: Build tool rápida para desenvolvimento moderno
++- **Headless UI**: Componentes acessíveis sem estilos predefinidos
++- **TanStack Table**: Biblioteca poderosa para controle de tabelas
++- **Docker**: Containerização para implantação consistente
+ 
+-## Arquitetura
++## Pré-requisitos
+ 
+-O projeto segue uma arquitetura baseada em componentes com separação clara de responsabilidades:
+-
+-### Camadas Principais
+-
+-1. **Composables** - Lógica reutilizável (hooks)
+-2. **Serviços** - Comunicação com API e processamento de dados
+-3. **Componentes** - Interface do usuário
+-4. **Tipos** - Definições de tipos TypeScript
+-
+-### Fluxo de Dados
++- Node.js (v18 ou superior)
++- npm ou yarn
++- Docker (opcional, para execução em container)
+ 
+-O fluxo de dados da aplicação segue o seguinte caminho:
++## Instalação
+ 
+-```
+-[API Backend] <---> [Serviços] <---> [Composables] <---> [Componentes UI]
+-```
++```bash
++# Clone o repositório
++git clone [url-do-repositorio]
++cd intuitive-care
+ 
+-### Estrutura de Arquivos
++# Instale as dependências
++npm install
+ 
++# Configure as variáveis de ambiente
++cp .env.example .env
++# Edite o arquivo .env com suas configurações
+ ```
+-src/
+-├── app/                 # Lógica da aplicação
+-│   ├── composables/     # Hooks reutilizáveis
+-│   ├── config/          # Configurações
+-│   ├── services/        # Serviços (API, etc)
+-│   ├── types/           # Definições de tipos
+-│   ├── utils/           # Utilitários
+-│   └── styles/          # Estilos globais
+-├── components/          # Componentes da UI
+-│   ├── data-table/      # Componentes da tabela de dados
+-│   └── ui/              # Componentes UI básicos
+-├── lib/                 # Bibliotecas/utilitários
+-└── App.vue              # Componente raiz
+-```
+-
+-## Integração com API
+-
+-A aplicação se integra com uma API RESTful para buscar dados de operadoras. Os principais parâmetros suportados são:
+-
+-- `query` - Texto de busca (mínimo 2 caracteres)
+-- `page` - Número da página (começa em 1)
+-- `page_size` - Quantidade de resultados por página
+-- `order_by` - Campo para ordenação
+-- `order_direction` - Direção da ordenação (`asc` ou `desc`)
+-
+-## Tipos e Enums
+-
+-O sistema utiliza TypeScript com tipos fortemente definidos:
+-
+-- `ApiField` - Enum para campos da API
+-- `FrontendField` - Enum para campos do frontend
+-- `SortDirection` - Enum para direções de ordenação
+-- `ApiOperator` - Interface para dados da operadora da API
+-- `OperatorRecord` - Interface para dados da operadora no frontend
+-
+-## Funcionalidades Principais
+-
+-### DataTable
+-
+-Componente principal que orquestra a exibição de dados tabulares com:
+-
+-- Cabeçalhos clicáveis para ordenação
+-- Paginação com navegação intuitiva
+-- Campo de busca para filtrar dados
+-- Indicadores de carregamento
+-- Estados vazios para resultados não encontrados
+-
+-### Ordenação
+-
+-Sistema de ordenação que:
+ 
+-- Alterna entre ordenação ascendente e descendente
+-- Sincroniza estado com a API
+-- Exibe indicadores visuais da ordenação atual
++## Desenvolvimento
+ 
+-### Busca
+-
+-Campo de busca inteligente que:
+-
+-- Implementa debounce para reduzir chamadas à API
+-- Valida comprimento mínimo da busca
+-- Exibe feedback visual durante a busca
+-
+-## Configuração do Projeto
+-
+-### Requisitos
+-
+-- Node.js 16+
+-- npm ou yarn
+-
+-### Instalação
+-
+-```sh
+-# Instalar dependências
+-npm install
+-
+-# Compilar e iniciar servidor de desenvolvimento
++```bash
++# Inicie o servidor de desenvolvimento
+ npm run dev
+-
+-# Verificar tipos, compilar e minificar para produção
+-npm run build
+-
+-# Executar linter
+-npm run lint
+ ```
+ 
+-### Variáveis de Ambiente
++## Build para produção
+ 
+-Crie um arquivo `.env.local` na raiz do projeto com as seguintes variáveis:
++```bash
++# Compile e minifique para produção
++npm run build
+ 
+-```sh
+-VITE_API_URL=http://sua-api-url.com
++# Visualize a build
++npm run preview
+ ```
+ 
+-## Componentes UI
+-
+-### Table
++## Execução com Docker
+ 
+-Componente de tabela altamente personalizável com:
++Para instruções detalhadas sobre a execução com Docker, consulte o arquivo [DOCKER.md](./DOCKER.md).
+ 
+-- `TableHeader` - Cabeçalho da tabela
+-- `TableBody` - Corpo da tabela
+-- `TableRow` - Linha da tabela
+-- `TableCell` - Célula da tabela
+-- `TableHead` - Célula de cabeçalho
++Resumidamente:
+ 
+-### TableControls
++```bash
++# Método 1: Usando o script de automatização
++chmod +x docker-build.sh
++./docker-build.sh
+ 
+-Barra de controles com:
++# Método 2: Usando npm scripts
++npm run docker:build  # Para construir a imagem
++npm run docker:run    # Para executar o container
++npm run docker        # Para fazer ambos
++```
+ 
+-- Campo de busca
+-- Botão de atualização
+-- Indicador de carregamento
++## Estrutura do Projeto
+ 
+-### PaginationControls
++```
++intuitive-care/
++├── src/
++│   ├── app/               # Lógica da aplicação
++│   │   ├── composables/   # Composables Vue reutilizáveis
++│   │   ├── config/        # Configurações
++│   │   ├── types/         # Tipos e interfaces TypeScript
++│   │   └── utils/         # Utilitários
++│   ├── components/        # Componentes Vue
++│   │   ├── data-table/    # Componentes da tabela de dados
++│   │   └── ui/            # Componentes de UI reutilizáveis
++│   └── lib/               # Bibliotecas e integrações
++├── public/                # Arquivos públicos
++├── dist/                  # Build de produção gerada pelo Vite
++├── Dockerfile             # Configuração para build do container
++├── nginx.conf             # Configuração do Nginx para servir a aplicação
++├── docker-build.sh        # Script para automatizar build do container
++└── ...
++```
+ 
+-Controles de paginação com:
++## Documentação
+ 
+-- Navegação por páginas
+-- Seletor de tamanho de página
+-- Indicador de resultados
++- [DEPLOY.md](./DEPLOY.md) - Instruções detalhadas para deploy em produção
++- [DOCKER.md](./DOCKER.md) - Guia para utilização com Docker
+ 
+ ## Contribuição
+ 
+ 1. Faça um fork do projeto
+-2. Crie uma branch para sua feature (`git checkout -b feature/nova-feature`)
+-3. Faça commit das alterações (`git commit -m 'Adiciona nova feature'`)
+-4. Faça push para a branch (`git push origin feature/nova-feature`)
++2. Crie sua branch de feature (`git checkout -b feature/amazing-feature`)
++3. Commit suas mudanças (`git commit -m 'Add some amazing feature'`)
++4. Push para a branch (`git push origin feature/amazing-feature`)
+ 5. Abra um Pull Request
+ 
+ ## Licença
+ 
+-[MIT](LICENSE.md)
++Este projeto está licenciado sob a licença MIT - veja o arquivo LICENSE para detalhes.
++
++## Contato
++
++Kleber Rhuan - [GitHub](https://github.com/seuusuario)
+diff --git a/index.html b/index.html
+index 393cb40..cefa1a4 100644
+--- a/index.html
++++ b/index.html
+@@ -2,9 +2,9 @@
+ <html lang="pt-BR">
+   <head>
+     <meta charset="UTF-8">
+-    <link rel="icon" href="/favicon.ico">
++    <link rel="icon" href="/icon.svg">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+-    <title>Searcher App</title>
++    <title>Cadastro de Operadores</title>
+     <link rel="preconnect" href="https://fonts.googleapis.com" />
+     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+     <link
+diff --git a/package.json b/package.json
+index 466e1cd..56b5762 100644
+--- a/package.json
++++ b/package.json
+@@ -1,6 +1,7 @@
+ {
+   "name": "intuitive-care",
+-  "version": "0.0.0",
++  "version": "1.0.0",
++  "author": "Kleber Rhuam <kleber_rhuan@hotmail.com",
+   "private": true,
+   "type": "module",
+   "scripts": {
+@@ -12,7 +13,10 @@
+     "lint:oxlint": "oxlint . --fix -D correctness --ignore-path .gitignore",
+     "lint:eslint": "eslint . --fix",
+     "lint": "run-s lint:*",
+-    "format": "prettier --write src/"
++    "format": "prettier --write src/",
++    "docker:build": "docker build -t intuitive-care:latest .",
++    "docker:run": "docker run -d -p 8080:80 --name intuitive-care intuitive-care:latest",
++    "docker": "chmod +x docker-build.sh && ./docker-build.sh"
+   },
+   "dependencies": {
+     "@headlessui/vue": "^1.7.23",
+diff --git a/public/icon.svg b/public/icon.svg
+index e69de29..9c311d6 100644
+--- a/public/icon.svg
++++ b/public/icon.svg
+@@ -0,0 +1,20 @@
++<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
++    <defs>
++        <!-- Gradiente sutil para o cabeçalho, com tons mais claros -->
++        <linearGradient id="headerGradient" x1="0" y1="0" x2="0" y2="1">
++            <stop offset="0%" stop-color="#AAAAAA"/>
++            <stop offset="100%" stop-color="#888888"/>
++        </linearGradient>
++    </defs>
++    <!-- Contorno da tabela com cantos arredondados utilizando uma cor clara -->
++    <rect x="20" y="20" width="160" height="160" rx="10" fill="none" stroke="#AAAAAA" stroke-width="2"/>
++    <!-- Cabeçalho preenchido com gradiente -->
++    <rect x="20" y="20" width="160" height="30" rx="5" fill="url(#headerGradient)"/>
++    <!-- Divisórias horizontais -->
++    <line x1="20" y1="60" x2="180" y2="60" stroke="#AAAAAA" stroke-width="1"/>
++    <line x1="20" y1="100" x2="180" y2="100" stroke="#AAAAAA" stroke-width="1"/>
++    <line x1="20" y1="140" x2="180" y2="140" stroke="#AAAAAA" stroke-width="1"/>
++    <!-- Divisórias verticais -->
++    <line x1="80" y1="20" x2="80" y2="180" stroke="#AAAAAA" stroke-width="1"/>
++    <line x1="140" y1="20" x2="140" y2="180" stroke="#AAAAAA" stroke-width="1"/>
++</svg>
+\ No newline at end of file
+diff --git a/src/App.vue b/src/App.vue
+index 169cb4f..7ef3819 100644
+--- a/src/App.vue
++++ b/src/App.vue
+@@ -1,6 +1,7 @@
+ <script setup lang="ts">
+ import { onMounted } from 'vue'
+ import DataTable from '@/components/data-table/DataTable.vue'
++import SocialLinks from '@/components/ui/SocialLinks.vue'
+ import { columns } from '@/app/utils/columns'
+ 
+ onMounted(() => {
+@@ -29,8 +30,13 @@ onMounted(() => {
+         </div>
+       </div>
+ 
+-      <footer class="mt-4 text-center text-white/40 text-sm font-light w-full">
+-        <p>Sistema de Cadastro de Operadores &copy; {{ new Date().getFullYear() }}</p>
++      <footer class="mt-4 text-center w-full">
++        <div class="max-w-md mx-auto px-4 pb-4 flex flex-col items-center">
++          <SocialLinks class="mb-3" />
++          <p class="text-white/40 text-sm font-light">
++            Sistema de Cadastro de Operadores &copy; {{ new Date().getFullYear() }} (Kleber Rhuan)
++          </p>
++        </div>
+       </footer>
+     </div>
+   </main>
+diff --git a/src/app/composables/index.ts b/src/app/composables/index.ts
+index 39923f6..17dffad 100644
+--- a/src/app/composables/index.ts
++++ b/src/app/composables/index.ts
+@@ -1,8 +1,9 @@
+-export * from './useSwrvCache.ts';
+-export * from './useDataTable';
+-export * from './usePagination';
+-export * from './useSearch';
+-export * from './useSorting';
+-export * from './useTableColumns';
+-export * from './useToast';
+-export * from './useVisibleColumns';
++export * from './useSwrvCache.ts'
++export * from './useDataTable'
++export * from './usePagination'
++export * from './useSearch'
++export * from './useSorting'
++export * from './useTableColumns'
++export * from './useToast'
++export * from './useVisibleColumns'
++export * from './useApiErrorState'
+diff --git a/src/app/composables/useDataTable.ts b/src/app/composables/useDataTable.ts
+index 58ab6a2..b84861b 100644
+--- a/src/app/composables/useDataTable.ts
++++ b/src/app/composables/useDataTable.ts
+@@ -12,58 +12,41 @@ import {
+   type FetchOperatorsParams,
+   type PaginatedResponse,
+   SortableFields,
+-  SortDirection,
+ } from '@/app/types'
+ import { API_CONFIG } from '@/app/config/api.ts'
+-import { errorHandler } from '@/app/utils/exceptionHandler'
++import { apiErrorState } from '@/app/composables/useApiErrorState'
+ 
+ export function useDataTable<T extends Record<string, unknown>>(options: DataTableOptions<T>) {
+   const {
+     columns: initialColumns,
+     persistKey,
+     defaultPageSize = 10,
+-    globalDebounce = 1500,
++    globalDebounce = 1000,
+   } = options
+ 
++  const { error, setError, clearError, wrap } = apiErrorState
++
+   const { columns, visibleColumns, toggleColumnVisibility, isColumnVisible, resetColumns } =
+     useTableColumns({
+       persistKey,
+       initialColumns,
+     })
+ 
+-  const {
+-    sortParams,
+-    handleSortFieldChange: rawHandleSortFieldChange,
+-    handleSortDirectionChange: rawHandleSortDirectionChange,
+-    toggleSortDirection: rawToggleSortDirection,
+-  } = useSorting()
+-
+-  const handleSortFieldChange = (field: SortableFields) => {
+-    try {
+-      rawHandleSortFieldChange(field)
+-    } catch (error) {
+-      errorHandler.handle(error, 'Alteração de campo de ordenação')
+-    }
+-  }
+-
+-  const handleSortDirectionChange = (order: SortDirection) => {
+-    try {
+-      rawHandleSortDirectionChange(order)
+-    } catch (error) {
+-      errorHandler.handle(error, 'Alteração de direção de ordenação')
+-    }
++  const handleSort = (field: SortableFields) => {
++    updateSort(field)
++    resetPage()
+   }
+ 
+-  // Nova função para alternar a direção de ordenação
+   const toggleSortDirection = () => {
+-    try {
+-      console.log('Alternando direção de ordenação')
+-      rawToggleSortDirection()
+-    } catch (error) {
+-      errorHandler.handle(error, 'Alternância de direção de ordenação')
+-    }
++    rawToggleSortDirection()
++    resetPage()
+   }
+ 
++  const handlePageChange = (page: number) => rawHandlePageChange(page)
++  const handlePageSizeChange = (size: number) => rawHandlePageSizeChange(size)
++
++  const { sortParams, updateSort, toggleSortDirection: rawToggleSortDirection } = useSorting()
++
+   const {
+     pagination,
+     handlePageChange: rawHandlePageChange,
+@@ -72,33 +55,11 @@ export function useDataTable<T extends Record<string, unknown>>(options: DataTab
+     resetPage,
+   } = usePagination(1, defaultPageSize)
+ 
+-  const handlePageChange = (page: number) => {
+-    try {
+-      rawHandlePageChange(page)
+-    } catch (error) {
+-      errorHandler.handle(error, 'Mudança de página')
+-    }
+-  }
+-
+-  const handlePageSizeChange = (size: number) => {
+-    try {
+-      rawHandlePageSizeChange(size)
+-    } catch (error) {
+-      errorHandler.handle(error, 'Alteração de itens por página')
+-    }
+-  }
+-
+   const { searchTerm, handleSearch, clearSearch } = useSearch({
+     onSearch: () => resetPage(),
+     minLength: 2,
+   })
+ 
+-  const items = ref<T[]>([])
+-  const isEmpty = computed(() => !items.value || items.value.length === 0)
+-  const total = ref(0)
+-  const error = ref<Error | null>(null)
+-  const debouncingRequest = ref(false)
+-
+   const fetchParams = computed<FetchOperatorsParams>(() => ({
+     page: pagination.value.page,
+     pageSize: pagination.value.pageSize,
+@@ -107,8 +68,28 @@ export function useDataTable<T extends Record<string, unknown>>(options: DataTab
+     sortDirection: sortParams.value.sortDirection,
+   }))
+ 
++  const items = ref<T[]>([])
++  const isEmpty = computed(() => !items.value || items.value.length === 0)
++  const total = ref(0)
++  const debouncingRequest = ref(false)
+   const actualFetchParams = ref<FetchOperatorsParams>(fetchParams.value)
+ 
++  const filteredFetchParams = computed(() => {
++    const params = actualFetchParams.value
++    return Object.fromEntries(
++      Object.entries(params).filter(
++        ([_, value]) => value !== null && value !== undefined && value !== '',
++      ),
++    )
++  })
++
++  const {
++    data: response,
++    isLoading: isLoadingFetch,
++    refresh: rawRefresh,
++    error: apiError,
++  } = useSwrvCache<PaginatedResponse<T>>(API_CONFIG.ENDPOINTS.OPERATORS, filteredFetchParams)
++
+   const updateAndRefresh = useDebounceFn(async (newParams: FetchOperatorsParams) => {
+     const newParamsString = JSON.stringify(newParams)
+     const currentParamsString = JSON.stringify(actualFetchParams.value)
+@@ -119,14 +100,6 @@ export function useDataTable<T extends Record<string, unknown>>(options: DataTab
+     }
+   }, globalDebounce)
+ 
+-  watch(
+-    sortParams,
+-    (newValue, oldValue) => {
+-      console.log('sortParams mudou de', oldValue, 'para', newValue)
+-    },
+-    { deep: true, immediate: true },
+-  )
+-
+   watch(
+     fetchParams,
+     async (newParams, oldParams) => {
+@@ -140,22 +113,9 @@ export function useDataTable<T extends Record<string, unknown>>(options: DataTab
+     { deep: true },
+   )
+ 
+-  const filteredFetchParams = computed(() => {
+-    const params = actualFetchParams.value;
+-    return Object.fromEntries(
+-      Object.entries(params).filter(([_, value]) => value !== null && value !== undefined && value !== '')
+-    );
+-  });
+-
+-  const {
+-    data: response,
+-    isLoading: isLoadingFetch,
+-    refresh: rawRefresh,
+-    error: apiError,
+-  } = useSwrvCache<PaginatedResponse<T>>(API_CONFIG.ENDPOINTS.OPERATORS, filteredFetchParams)
+-
+-  const refresh = errorHandler.withErrorHandling(async () => {
+-    error.value = null
++  // Função de refresh com tratamento de erro centralizado
++  const refresh = wrap(async () => {
++    clearError()
+     return await rawRefresh()
+   }, 'Atualização de dados')
+ 
+@@ -164,9 +124,7 @@ export function useDataTable<T extends Record<string, unknown>>(options: DataTab
+     apiError,
+     (newError) => {
+       if (newError) {
+-        console.error('Erro ao carregar dados:', newError)
+-        error.value = newError
+-        errorHandler.handle(newError, 'Carregamento de dados')
++        setError(newError, 'Carregamento de dados')
+       }
+     },
+     { immediate: true },
+@@ -178,29 +136,25 @@ export function useDataTable<T extends Record<string, unknown>>(options: DataTab
+     (dataResponse) => {
+       try {
+         if (dataResponse) {
+-          console.log('dataResponse', dataResponse)
+           const responseData = dataResponse.data as unknown as PaginatedResponse<T>
+           items.value = responseData.data
+           total.value = responseData.totalItems
+           updatePaginationInfo(responseData.totalItems, Number(responseData.totalPages))
+         }
+       } catch (err) {
+-        errorHandler.handle(err, 'Processamento de resposta')
++        setError(err instanceof Error ? err : new Error(String(err)), 'Processamento de resposta')
+       }
+     },
+-    { immediate: true }
++    { immediate: true },
+   )
+ 
+-  const reset = async () => {
+-    try {
+-      clearSearch()
+-      resetPage()
+-      actualFetchParams.value = fetchParams.value
+-      await refresh()
+-    } catch (err) {
+-      errorHandler.handle(err, 'Reset de dados')
+-    }
+-  }
++  // Reset com tratamento de erro centralizado
++  const reset = wrap(async () => {
++    clearSearch()
++    resetPage()
++    actualFetchParams.value = fetchParams.value
++    await refresh()
++  }, 'Reset de dados')
+ 
+   const maxPage = computed(() => pagination.value.totalPages)
+   const displayRange = computed(() => {
+@@ -209,7 +163,7 @@ export function useDataTable<T extends Record<string, unknown>>(options: DataTab
+       const end = Math.min(pagination.value.page * pagination.value.pageSize, total.value)
+       return { start, end }
+     } catch (err) {
+-      errorHandler.handle(err, 'Cálculo de intervalo')
++      setError(err instanceof Error ? err : new Error(String(err)), 'Cálculo de intervalo')
+       return { start: 0, end: 0 }
+     }
+   })
+@@ -238,8 +192,7 @@ export function useDataTable<T extends Record<string, unknown>>(options: DataTab
+     refresh,
+     reset,
+ 
+-    handleSortFieldChange,
+-    handleSortDirectionChange: handleSortDirectionChange,
+     toggleSortDirection: toggleSortDirection,
++    handleSort,
+   }
+ }
+diff --git a/src/app/composables/useSorting.ts b/src/app/composables/useSorting.ts
+index 88a6c73..a33e55c 100644
+--- a/src/app/composables/useSorting.ts
++++ b/src/app/composables/useSorting.ts
+@@ -1,50 +1,48 @@
++import { SortDirection, SortableFields, type SortConfig } from '@/app/types'
+ import { ref, computed } from 'vue'
+-import {SortDirection, SortableFields, type SortConfig } from '@/app/types'
+ 
+ export function useSorting() {
+   const sortConfig = ref<SortConfig>({
+-    order: null,
+-    field: null,
++    sortField: null,
++    sortDirection: null
+   })
+ 
+-  const sortParams = computed(() => { return {
+-    sortField: sortConfig.value.field,
+-    sortDirection: sortConfig.value.order,}
+-  })
++  const sortParams = computed(() => ({
++    sortField: sortConfig.value.sortField,
++    sortDirection: sortConfig.value.sortDirection
++  }))
+ 
+-  const handleSortFieldChange = (field: SortableFields) => {
+-    if (sortConfig.value.field !== field) {
+-      sortConfig.value.field = field
++  /**
++   * Atualiza o campo de ordenação. Se o campo for diferente do atual,
++   * define o novo campo e reseta a direção para ASC.
++   * Se o campo for o mesmo, permite atualizar a direção se necessário.
++   * Retorna true se houve alteração.
++   */
++  const updateSort = (field: SortableFields, direction?: SortDirection) => {
++    if (sortConfig.value.sortField !== field) {
++      sortConfig.value = { sortField: field, sortDirection: SortDirection.ASC }
+       return true
+     }
+-    return false
+-  }
+ 
+-  const handleSortDirectionChange = (order: SortDirection) => {
+-    if (sortConfig.value.order !== order) {
+-      sortConfig.value.order = order
++    if (direction && sortConfig.value.sortDirection !== direction) {
++      sortConfig.value.sortDirection = direction
+       return true
+     }
++
+     return false
+   }
+ 
+   const toggleSortDirection = () => {
+-    const newOrder =
+-      sortConfig.value.order === SortDirection.ASC ? SortDirection.DESC : SortDirection.ASC
+-    return handleSortDirectionChange(newOrder)
+-  }
+-
+-  const setSortFromApi = (field: SortableFields, order: SortDirection) => {
+-    if (field && (field !== sortConfig.value.field || order !== sortConfig.value.order)) {
+-      sortConfig.value = { field, order }
+-    }
++    const newDirection =
++      sortConfig.value.sortDirection === SortDirection.ASC
++        ? SortDirection.DESC
++        : SortDirection.ASC
++    return updateSort(sortConfig.value.sortField!, newDirection)
+   }
+ 
+   return {
+-    setSortFromApi,
+     sortParams,
+-    handleSortFieldChange,
+-    handleSortDirectionChange: handleSortDirectionChange,
+-    toggleSortDirection: toggleSortDirection,
++    updateSort,
++    toggleSortDirection
+   }
+ }
+diff --git a/src/app/composables/useTableColumns.ts b/src/app/composables/useTableColumns.ts
+index 66462d1..afe0b87 100644
+--- a/src/app/composables/useTableColumns.ts
++++ b/src/app/composables/useTableColumns.ts
+@@ -1,5 +1,6 @@
+ import { ref, computed } from 'vue'
+ import type { ColumnDefinition, TableColumnOptions } from '@/app/types'
++import { apiErrorState } from '@/app/composables/useApiErrorState'
+ 
+ export function useTableColumns(options: TableColumnOptions) {
+   const { persistKey, initialColumns = [] } = options
+@@ -16,7 +17,10 @@ export function useTableColumns(options: TableColumnOptions) {
+         }))
+       }
+     } catch (error) {
+-      console.error('Erro ao carregar configuração de colunas:', error)
++      apiErrorState.setError(
++        error instanceof Error ? error : new Error(String(error)),
++        'Carregamento de configuração de colunas',
++      )
+     }
+ 
+     return initialColumns
+@@ -39,7 +43,10 @@ export function useTableColumns(options: TableColumnOptions) {
+ 
+       localStorage.setItem(`table-columns-${persistKey}`, JSON.stringify(visibilityMap))
+     } catch (error) {
+-      console.error('Erro ao salvar configuração de colunas:', error)
++      apiErrorState.setError(
++        error instanceof Error ? error : new Error(String(error)),
++        'Salvamento de configuração de colunas',
++      )
+     }
+   }
+ 
+diff --git a/src/app/composables/useVisibleColumns.ts b/src/app/composables/useVisibleColumns.ts
+index 33e021f..d32dde2 100644
+--- a/src/app/composables/useVisibleColumns.ts
++++ b/src/app/composables/useVisibleColumns.ts
+@@ -1,5 +1,6 @@
+ import { ref, computed } from 'vue'
+ import type { Ref } from 'vue'
++import { apiErrorState } from '@/app/composables/useApiErrorState'
+ 
+ export interface Column {
+   key: string
+@@ -18,64 +19,65 @@ export interface VisibleColumnsOptions {
+ }
+ 
+ export function useVisibleColumns(options: VisibleColumnsOptions = {}) {
+-  const {
+-    persistKey,
+-    defaultColumns = []
+-  } = options
++  const { persistKey, defaultColumns = [] } = options
+ 
+   const loadSavedColumns = (): Column[] => {
+     if (!persistKey) return defaultColumns
+-    
++
+     try {
+       const saved = localStorage.getItem(`table-columns-${persistKey}`)
+       if (saved) {
+         const parsedColumns = JSON.parse(saved) as Column[]
+         const mergedColumns = [...parsedColumns]
+-        
+-        defaultColumns.forEach(defaultCol => {
+-          const existingColIndex = mergedColumns.findIndex(col => col.key === defaultCol.key)
+-          
++
++        defaultColumns.forEach((defaultCol) => {
++          const existingColIndex = mergedColumns.findIndex((col) => col.key === defaultCol.key)
++
+           if (existingColIndex === -1) {
+             mergedColumns.push(defaultCol)
+           }
+         })
+-        
++
+         return mergedColumns
+       }
+     } catch (error) {
+-      console.error('Erro ao carregar colunas salvas:', error)
++      apiErrorState.setError(
++        error instanceof Error ? error : new Error(String(error)),
++        'Carregamento de configuração de colunas',
++      )
+     }
+-    
++
+     return defaultColumns
+   }
+ 
+   const columns = ref<Column[]>(loadSavedColumns())
+ 
+-  const visibleColumns = computed(() => 
+-    columns.value.filter(column => column.visible !== false)
+-  )
++  const visibleColumns = computed(() => columns.value.filter((column) => column.visible !== false))
+ 
+   const saveColumns = () => {
+     if (!persistKey) return
+-    
++
+     try {
+       localStorage.setItem(`table-columns-${persistKey}`, JSON.stringify(columns.value))
+     } catch (error) {
+-      console.error('Erro ao salvar colunas:', error)
++      apiErrorState.setError(
++        error instanceof Error ? error : new Error(String(error)),
++        'Salvamento de configuração de colunas',
++      )
+     }
+   }
+ 
+   const toggleColumnVisibility = (key: string) => {
+-    const columnIndex = columns.value.findIndex(col => col.key === key)
+-    
++    const columnIndex = columns.value.findIndex((col) => col.key === key)
++
+     if (columnIndex !== -1) {
+       const updatedColumn = { ...columns.value[columnIndex] }
+       updatedColumn.visible = updatedColumn.visible === false ? true : false
+-      
++
+       const updatedColumns = [...columns.value]
+       updatedColumns[columnIndex] = updatedColumn
+       columns.value = updatedColumns
+-      
++
+       saveColumns()
+     }
+   }
+@@ -95,6 +97,6 @@ export function useVisibleColumns(options: VisibleColumnsOptions = {}) {
+     visibleColumns,
+     toggleColumnVisibility,
+     setColumns,
+-    resetToDefault
++    resetToDefault,
+   }
+-} 
+\ No newline at end of file
++}
+diff --git a/src/app/config/api.ts b/src/app/config/api.ts
+index 693cc72..5aed166 100644
+--- a/src/app/config/api.ts
++++ b/src/app/config/api.ts
+@@ -1,5 +1,3 @@
+-import {SortableFields, SortDirection} from '@/app/types'
+-
+ const BASE_URL = import.meta.env.VITE_API_URL
+ 
+ export const API_CONFIG = {
+@@ -9,13 +7,7 @@ export const API_CONFIG = {
+     OPERATOR_DETAIL: (id: number) => `/api/v1/operators?query=${id}&page_size=1`,
+   },
+   PAGINATION: {
+-    DEFAULT_PAGE: 1,
+-    DEFAULT_PAGE_SIZE: 10,
+     PAGE_SIZE_OPTIONS: [10, 20, 30, 50, 100],
+   },
+-  SORT: {
+-    DEFAULT_FIELD: SortableFields,
+-    DEFAULT_ORDER: SortDirection.DESC,
+-  },
+   TIMEOUT: 10000,
+ }
+diff --git a/src/app/types/api/requests.ts b/src/app/types/api/requests.ts
+index e717822..47b81bc 100644
+--- a/src/app/types/api/requests.ts
++++ b/src/app/types/api/requests.ts
+@@ -4,17 +4,17 @@ import {SortableFields, SortDirection} from '@/app/types'
+  * Parâmetros para busca de operadores na API
+  */
+ export interface FetchOperatorsParams extends FetchParams{
+-  sortField?: SortableFields
+-  sortDirection?: SortDirection
++  sortField?: SortableFields | null
++  sortDirection?: SortDirection | null
+ }
+ 
+ /**
+  * Parâmetros genéricos para busca em qualquer endpoint
+  */
+ export interface FetchParams extends Record<string, unknown> {
+-  page: number
+-  pageSize: number
+-  search?: string
+-  sortField?: string
+-  sortDirection?: SortDirection
++  page: number | null
++  pageSize: number | null
++  search?: string | null
++  sortField?: string | null
++  sortDirection?: SortDirection | null
+ }
+diff --git a/src/app/types/index.ts b/src/app/types/index.ts
+index 9833506..43775c9 100644
+--- a/src/app/types/index.ts
++++ b/src/app/types/index.ts
+@@ -15,3 +15,6 @@ export * from './domain/operator'
+ 
+ // UI - componentes e interfaces gráficas
+ export * from './ui/table'
++
++// Errors - tipos relacionados a erros
++export * from './errors'
+diff --git a/src/app/types/ui/table.ts b/src/app/types/ui/table.ts
+index 4838c94..10a6fe6 100644
+--- a/src/app/types/ui/table.ts
++++ b/src/app/types/ui/table.ts
+@@ -28,16 +28,11 @@ export interface DataTableOptions<T> {
+   persistKey?: string
+   defaultPageSize?: number
+   globalDebounce?: number
+-  initialSort?: { field: SortableFields; direction: SortDirection }
+-  sortable?: Record<string, boolean>
+-  initialItemsPerPage?: number
+-  itemsPerPageOptions?: number[]
+-  refetchOnOptionsChange?: boolean
+ }
+ 
+ export interface SortConfig {
+-  field: SortableFields | null
+-  order: SortDirection | null
++  sortField: SortableFields | null
++  sortDirection: SortDirection | null
+ }
+ 
+ export interface PaginationState {
+diff --git a/src/app/utils/exceptionHandler.ts b/src/app/utils/exceptionHandler.ts
+deleted file mode 100644
+index 4471c87..0000000
+--- a/src/app/utils/exceptionHandler.ts
++++ /dev/null
+@@ -1,138 +0,0 @@
+-import { useToast } from '@/app/composables/useToast'
+-
+-export enum ErrorType {
+-  API = 'api',
+-  VALIDATION = 'validation',
+-  NETWORK = 'network',
+-  AUTH = 'auth',
+-  UNKNOWN = 'unknown',
+-}
+-
+-export interface AppError extends Error {
+-  type?: ErrorType
+-  details?: Record<string, unknown>
+-  userMessage?: string
+-}
+-
+-/**
+- * Classe para tratamento centralizado de exceções
+- */
+-class ExceptionHandler {
+-  private toast = useToast()
+-
+-  /**
+-   * Captura e trata uma exceção, exibindo toast e logando informações
+-   */
+-  public handle(error: unknown, context?: string): void {
+-    const appError = this.normalizeError(error)
+-    this.logError(appError, context)
+-    this.showErrorToast(appError)
+-  }
+-
+-  /**
+-   * Cria um handler de função para uso em try/catch
+-   */
+-  public createHandler(context: string) {
+-    return (error: unknown) => this.handle(error, context)
+-  }
+-
+-  /**
+-   * Método para envolver uma função com tratamento de erro
+-   * Exemplo: const safeFunction = errorHandler.withErrorHandling(riskyFunction, 'Operação de Risco')
+-   */
+-  public withErrorHandling<T extends (...args: any[]) => Promise<any>>(
+-    fn: T,
+-    context: string,
+-  ): (...args: Parameters<T>) => Promise<Awaited<ReturnType<T>> | undefined> {
+-    return async (...args: Parameters<T>): Promise<Awaited<ReturnType<T>> | undefined> => {
+-      try {
+-        return await fn(...args)
+-      } catch (error) {
+-        this.handle(error, context)
+-        return undefined
+-      }
+-    }
+-  }
+-
+-  /**
+-   * Converte diferentes tipos de erro para um formato padronizado
+-   */
+-  private normalizeError(error: unknown): AppError {
+-    if (error instanceof Error) {
+-      return error as AppError
+-    }
+-
+-    if (typeof error === 'string') {
+-      const newError = new Error(error) as AppError
+-      newError.type = ErrorType.UNKNOWN
+-      return newError
+-    }
+-
+-    const newError = new Error('Erro desconhecido') as AppError
+-    newError.type = ErrorType.UNKNOWN
+-    newError.details = { originalError: error }
+-    return newError
+-  }
+-
+-  /**
+-   * Registra o erro no console com informações de contexto
+-   */
+-  private logError(error: AppError, context?: string): void {
+-    console.error(`[${context || 'App'}] ${error.type || 'ERROR'}:`, error.message, error)
+-  }
+-
+-  /**
+-   * Exibe o toast apropriado baseado no tipo de erro
+-   */
+-  private showErrorToast(error: AppError): void {
+-    const title = this.getErrorTitle(error)
+-    const message = error.userMessage || error.message || 'Ocorreu um erro inesperado'
+-
+-    switch (error.type) {
+-      case ErrorType.VALIDATION:
+-        this.toast.warning(title, message)
+-        break
+-      case ErrorType.NETWORK:
+-        this.toast.error(title, message)
+-        break
+-      case ErrorType.AUTH:
+-        this.toast.info(title, message)
+-        break
+-      default:
+-        this.toast.error(title, message)
+-    }
+-  }
+-
+-  /**
+-   * Define o título do toast baseado no tipo de erro
+-   */
+-  private getErrorTitle(error: AppError): string {
+-    switch (error.type) {
+-      case ErrorType.API:
+-        return 'Erro na API'
+-      case ErrorType.VALIDATION:
+-        return 'Erro de validação'
+-      case ErrorType.NETWORK:
+-        return 'Erro de conexão'
+-      case ErrorType.AUTH:
+-        return 'Erro de autenticação'
+-      default:
+-        return 'Erro'
+-    }
+-  }
+-}
+-
+-export const errorHandler = new ExceptionHandler()
+-
+-export function createAppError(
+-  message: string,
+-  type: ErrorType = ErrorType.UNKNOWN,
+-  userMessage?: string,
+-  details?: Record<string, unknown>,
+-): AppError {
+-  const error = new Error(message) as AppError
+-  error.type = type
+-  error.userMessage = userMessage
+-  error.details = details
+-  return error
+-}
+diff --git a/src/components/data-table/DataTable.vue b/src/components/data-table/DataTable.vue
+index c9ef6de..d85c73f 100644
+--- a/src/components/data-table/DataTable.vue
++++ b/src/components/data-table/DataTable.vue
+@@ -1,20 +1,50 @@
+ <template>
+   <div>
++    <!-- Alerta de erro de API -->
++    <div
++      v-if="apiError && apiError.message"
++      class="mb-4 p-3 bg-red-900/30 border border-red-700 rounded-lg text-white flex items-center justify-between"
++    >
++      <div class="flex items-center">
++        <div class="mr-3 text-red-400">
++          <AlertCircleIcon class="h-5 w-5" />
++        </div>
++        <span>{{ apiError.message }}</span>
++      </div>
++      <button
++        @click="clearApiError"
++        class="text-white/70 hover:text-white p-1 rounded-full hover:bg-white/10"
++      >
++        <XIcon class="h-4 w-4" />
++      </button>
++    </div>
++
++    <!-- Alerta de rate limit -->
++    <div
++      v-if="isRateLimited"
++      class="mb-4 p-3 bg-amber-900/30 border border-amber-700 rounded-lg text-white flex items-center justify-between"
++    >
++      <div class="flex items-center">
++        <div class="mr-3 text-amber-400">
++          <ClockIcon class="h-5 w-5" />
++        </div>
++        <span>Muitas requisições! Aguarde {{ retryAfter }} segundos para continuar.</span>
++      </div>
++    </div>
++
+     <TableControls
+       v-model:search="searchTerm"
+-      :is-searching="isLoading"
+       :is-loading="isLoading"
+       @refresh="refresh"
+       @search="handleSearch"
+     />
+ 
+-    <TableContainer>
++    <TableContainer ref="tableContainerRef">
+       <Table>
+         <TableHeaders
+           :columns="visibleColumns"
+           :sort-params="sortParams"
+-          @sort-field="handleSortFieldChange"
+-          @sort-order="handleSortDirectionChange"
++          @sort="handleSort"
+           @toggle-order="toggleSortDirection"
+         />
+ 
+@@ -38,7 +68,7 @@
+ </template>
+ 
+ <script setup lang="ts">
+-import {Table} from '@/components/ui/table'
++import { Table } from '@/components/ui/table'
+ import TableControls from '@/components/data-table/TableControls.vue'
+ import TableHeaders from '@/components/data-table/TableHeaders.vue'
+ import TableContainer from '@/components/data-table/TableContainer.vue'
+@@ -46,6 +76,9 @@ import TableContent from '@/components/data-table/TableContent.vue'
+ import PaginationControls from '@/components/data-table/PaginationControls.vue'
+ import { useDataTable } from '@/app/composables/useDataTable.ts'
+ import type { ColumnDefinition } from '@/app/types'
++import { AlertCircleIcon, XIcon, ClockIcon } from 'lucide-vue-next'
++import { apiErrorState } from '@/app/composables/useApiErrorState'
++const { error: apiError, isRateLimited, retryAfter, clearError: clearApiError } = apiErrorState
+ 
+ interface DataTableProps {
+   columns: ColumnDefinition[]
+@@ -69,9 +102,8 @@ const {
+   handleSearch,
+   refresh,
+   error,
+-  handleSortFieldChange,
+-  handleSortDirectionChange,
+   toggleSortDirection,
++  handleSort,
+ } = useDataTable({
+   columns: props.columns,
+   persistKey: props.persistKey,
+diff --git a/src/components/data-table/TableContainer.vue b/src/components/data-table/TableContainer.vue
+index eabd69f..92cb03d 100644
+--- a/src/components/data-table/TableContainer.vue
++++ b/src/components/data-table/TableContainer.vue
+@@ -8,8 +8,6 @@
+   </div>
+ </template>
+ 
+-<script setup lang="ts"></script>
+-
+ <style>
+ .custom-scrollbar {
+   scrollbar-width: thin;
+diff --git a/src/components/data-table/TableContent.vue b/src/components/data-table/TableContent.vue
+index 3609aaf..b0e0925 100644
+--- a/src/components/data-table/TableContent.vue
++++ b/src/components/data-table/TableContent.vue
+@@ -1,13 +1,11 @@
+ <template>
+   <TableBody>
+     <template v-if="loading">
+-      <div class="w-full h-full flex items-center justify-center">
+-        <Loader2Icon class="h-16 w-16 animate-spin text-primary" />
+-      </div>
++      <LoadingState />
+     </template>
+     <template v-else-if="error">
+       <TableRow
+-        class="w-full grid h-full flex items-center justify-center"
++        class="w-full grid h-full items-center justify-center"
+         :style="gridTemplateColumnsStyle"
+       >
+         <TableCell :colspan="columns.length" class="col-span-full">
+@@ -32,16 +30,23 @@
+           :key="`${tableContentHelper.getItemKey(item) || index}-${column.id}`"
+           class="text-white/80 py-3 min-h-[56px] px-3 flex items-center justify-center text-center"
+         >
+-          <div class="w-full text-center truncate" :title="formatCellValue(item, column)">
+-            {{ formatCellValue(item, column) }}
+-          </div>
++          <TooltipProvider>
++            <Tooltip>
++              <TooltipTrigger as-child>
++                <div class="w-full text-center truncate" :title="formatCellValue(item, column)">
++                  {{ formatCellValue(item, column) }}
++                </div>
++              </TooltipTrigger>
++              <TooltipContent>
++                {{ formatCellValue(item, column) }}
++              </TooltipContent>
++            </Tooltip>
++          </TooltipProvider>
+         </TableCell>
+       </TableRow>
+     </template>
+-    <template v-else>
+-      <div class="w-full h-full flex items-center justify-center">
+-        <p class="text-white/80 text-center text-lg font-medium">Nenhum operador encontrado.</p>
+-      </div>
++    <template v-else-if="empty">
++      <EmptyState />
+     </template>
+   </TableBody>
+ </template>
+@@ -49,10 +54,12 @@
+ <script setup lang="ts">
+ import { computed } from 'vue'
+ import { TableBody, TableCell, TableRow } from '@/components/ui/table/index'
+-import { Loader2Icon } from 'lucide-vue-next'
+ import { type ColumnDefinition, SortableFields } from '@/app/types'
++import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+ import TableContentHelper from '@/app/utils/TableContentHelper.ts'
+ import ErrorState from './ErrorState.vue'
++import LoadingState from './LoadingState.vue'
++import EmptyState from './EmptyState.vue'
+ 
+ const props = withDefaults(
+   defineProps<{
+@@ -109,7 +116,6 @@ const formatCellValue = (item: Record<string, unknown>, column: ColumnDefinition
+     formatted = tableContentHelper.formatDefault(value)
+   }
+ 
+-  // Armazenar no cache
+   formatCache.set(cacheKey, formatted)
+   return formatted
+ }
+diff --git a/src/components/data-table/TableControls.vue b/src/components/data-table/TableControls.vue
+index 80a134e..5b30613 100644
+--- a/src/components/data-table/TableControls.vue
++++ b/src/components/data-table/TableControls.vue
+@@ -9,7 +9,7 @@
+ 
+       <!-- Ícone de loading que aparece sobre o ícone de pesquisa -->
+       <LoaderIcon
+-        v-if="isActuallySearching"
++        v-if="isLoading"
+         class="search-loading absolute left-5 top-1/2 transform -translate-y-1/2 h-4 w-4 text-primary animate-spin"
+       />
+ 
+@@ -27,10 +27,10 @@
+       variant="default"
+       class="refresh-button bg-transparent border border-white/10 hover:bg-white/20 hover:border-white/30 text-white/90 hover:text-white backdrop-blur-sm text-sm font-medium rounded-full px-4 py-2 h-10 transition-all shadow-sm ml-auto mt-0 md:mt-0"
+       @click="onRefresh"
+-      :disabled="isActuallySearching"
++      :disabled="isLoading"
+       aria-label="Atualizar dados"
+     >
+-      <RefreshCcwIcon v-if="!isActuallyRefreshing" class="mr-1.5 h-3.5 w-3.5" />
++      <RefreshCcwIcon v-if="!isLoading" class="mr-1.5 h-3.5 w-3.5" />
+       <LoaderIcon v-else class="mr-1.5 h-3.5 w-3.5 animate-spin" />
+       <span>Atualizar</span>
+     </Button>
+@@ -45,8 +45,7 @@ import { RefreshCcwIcon, SearchIcon, LoaderIcon } from 'lucide-vue-next'
+ import { useDebounceFn } from '@vueuse/core'
+ 
+ const props = defineProps<{
+-  isSearching?: boolean
+-  isRefreshing?: boolean
++  isLoading?: boolean
+   search_term?: string
+ }>()
+ 
+@@ -72,8 +71,7 @@ watch(
+   { immediate: true },
+ )
+ 
+-const isActuallySearching = computed(() => Boolean(props.isSearching))
+-const isActuallyRefreshing = computed(() => Boolean(props.isRefreshing))
++const isLoading = computed(() => Boolean(props.isLoading))
+ 
+ const debouncedSearch = useDebounceFn(() => {
+   emit('search', searchTerm.value)
+diff --git a/src/components/data-table/TableHeaders.vue b/src/components/data-table/TableHeaders.vue
+index 337a435..97ad04e 100644
+--- a/src/components/data-table/TableHeaders.vue
++++ b/src/components/data-table/TableHeaders.vue
+@@ -7,8 +7,8 @@
+         v-memo="[
+           column.id,
+           column.sortable,
+-          currentSortField === column.id,
+-          currentSortField === column.id ? currentSortDirection : '',
++          currentSortedField === column.id,
++          currentSortedField === column.id ? currentSortedDirection : '',
+         ]"
+         :class="getHeaderClasses(column)"
+         @click="column.sortable ? handleSorting(column.id as SortableFields) : null"
+@@ -17,18 +17,16 @@
+           <p
+             class="whitespace-nowrap overflow-hidden text-ellipsis text-center"
+             :title="column.title"
+-            @click.stop="column.sortable ? handleSortFieldClick(column.id as SortableFields) : null"
+           >
+             {{ column.title }}
+           </p>
+ 
+           <SortingIcon
+             v-if="column.sortable"
+-            :is-active="currentSortField === column.id"
+-            :direction="currentSortField === column.id ? currentSortDirection : undefined"
++            :is-active="currentSortedField === column.id"
++            :direction="currentSortedField === column.id ? currentSortedDirection : undefined"
+             :field="column.id as SortableFields"
+             class="ml-1 flex-shrink-0"
+-            @click.stop="handleSortDirectionClick(column.id as SortableFields)"
+           />
+         </div>
+       </TableHead>
+@@ -37,19 +35,18 @@
+ </template>
+ 
+ <script setup lang="ts">
+-import { computed, defineComponent, h, markRaw } from 'vue'
++import { computed, defineComponent, h, markRaw, type PropType } from 'vue'
+ import { TableHead, TableHeader, TableRow } from '@/components/ui/table/index'
+ import { ArrowUpIcon, ArrowDownIcon, ArrowUpDownIcon } from 'lucide-vue-next'
+-import { SortDirection, type ColumnDefinition, SortableFields } from '@/app/types'
++import { SortDirection, type ColumnDefinition, SortableFields, type SortConfig } from '@/app/types'
+ 
+ const props = defineProps<{
+   columns: ColumnDefinition[]
+-  sortParams: Record<string, string>
++  sortParams: SortConfig
+   minColumnWidth?: number
+ }>()
+ 
+-// Definir valores padrão para props opcionais
+-const minColumnWidth = props.minColumnWidth || 160
++const minColumnWidth = props.minColumnWidth || 180
+ 
+ // Computed para grid de colunas - responsivo horizontal
+ const gridTemplateColumnsStyle = computed(() => {
+@@ -58,8 +55,6 @@ const gridTemplateColumnsStyle = computed(() => {
+ 
+ const emit = defineEmits<{
+   (e: 'sort', field: SortableFields): void
+-  (e: 'sort-field', field: SortableFields): void
+-  (e: 'sort-order', order: SortDirection): void
+   (e: 'toggle-order'): void
+ }>()
+ 
+@@ -68,7 +63,7 @@ const SortingIcon = markRaw(
+   defineComponent({
+     props: {
+       isActive: Boolean,
+-      direction: String,
++      direction: String as PropType<SortDirection | null>,
+       field: String,
+     },
+     setup(props) {
+@@ -90,8 +85,13 @@ const SortingIcon = markRaw(
+   }),
+ )
+ 
+-const currentSortField = computed(() => props.sortParams.field)
+-const currentSortDirection = computed(() => props.sortParams.order)
++const currentSortedField = computed(() => {
++  return props.sortParams.sortField
++})
++
++const currentSortedDirection = computed(() => {
++  return props.sortParams.sortDirection
++})
+ 
+ const headerClassesCache = new Map()
+ const getHeaderClasses = (column: ColumnDefinition) => {
+@@ -101,7 +101,9 @@ const getHeaderClasses = (column: ColumnDefinition) => {
+ 
+   const classes = [
+     'text-white/90 font-medium flex items-center justify-center text-center',
+-    { 'cursor-pointer hover:bg-white/10 transition-colors': column.sortable },
++    {
++      'cursor-pointer hover:bg-white/10 transition-colors': column.sortable,
++    },
+   ]
+ 
+   headerClassesCache.set(column.id, classes)
+@@ -109,19 +111,10 @@ const getHeaderClasses = (column: ColumnDefinition) => {
+ }
+ 
+ const handleSorting = (field: SortableFields) => {
+-  emit('sort', field)
+-}
+-
+-const handleSortFieldClick = (field: SortableFields) => {
+-  emit('sort-field', field)
+-}
+-
+-const handleSortDirectionClick = (field: SortableFields) => {
+-  if (field === currentSortField.value) {
++  if (field === currentSortedField.value) {
+     emit('toggle-order')
+-  } else {
+-    emit('sort-field', field)
+-    emit('sort-order', SortDirection.DESC)
++    return
+   }
++  emit('sort', field)
+ }
+ </script>
+diff --git a/src/components/data-table/index.ts b/src/components/data-table/index.ts
+index 36fb038..28e4aa1 100644
+--- a/src/components/data-table/index.ts
++++ b/src/components/data-table/index.ts
+@@ -4,3 +4,6 @@ export * from './PaginationControls.vue'
+ export * from './TableContainer.vue'
+ export * from './TableHeaders.vue'
+ export * from './TableContent.vue'
++export * from './ErrorState.vue'
++export * from './LoadingState.vue'
++export * from './EmptyState.vue'
+diff --git a/src/components/ui/select.vue b/src/components/ui/select.vue
+deleted file mode 100644
+index 943cb2e..0000000
+--- a/src/components/ui/select.vue
++++ /dev/null
+@@ -1,45 +0,0 @@
+-<script setup lang="ts">
+-import { computed, provide, ref, toRef, watch } from 'vue'
+-import { ChevronDownIcon, CheckIcon } from 'lucide-vue-next'
+-import { 
+-  Listbox, 
+-  ListboxButton, 
+-  ListboxOptions, 
+-  ListboxOption, 
+-  ListboxLabel 
+-} from '@headlessui/vue'
+-import { cn } from '@/lib/utils'
+-
+-const props = defineProps<{
+-  modelValue?: string
+-  placeholder?: string
+-  disabled?: boolean
+-  name?: string
+-}>()
+-
+-const emit = defineEmits(['update:modelValue'])
+-
+-const selectedValue = computed({
+-  get: () => props.modelValue,
+-  set: (val) => emit('update:modelValue', val)
+-})
+-
+-// Provide context for children components
+-provide('select', {
+-  selectedValue,
+-  name: toRef(props, 'name'),
+-  disabled: toRef(props, 'disabled'),
+-  placeholder: toRef(props, 'placeholder')
+-})
+-</script>
+-
+-<template>
+-  <Listbox 
+-    v-model="selectedValue" 
+-    :disabled="disabled"
+-    as="div" 
+-    class="relative"
+-  >
+-    <slot />
+-  </Listbox>
+-</template> 
+\ No newline at end of file
+diff --git a/src/components/ui/select/Select.vue b/src/components/ui/select/Select.vue
+deleted file mode 100644
+index b9b1f33..0000000
+--- a/src/components/ui/select/Select.vue
++++ /dev/null
+@@ -1,15 +0,0 @@
+-<script setup lang="ts">
+-import type { SelectRootEmits, SelectRootProps } from 'reka-ui'
+-import { SelectRoot, useForwardPropsEmits } from 'reka-ui'
+-
+-const props = defineProps<SelectRootProps>()
+-const emits = defineEmits<SelectRootEmits>()
+-
+-const forwarded = useForwardPropsEmits(props, emits)
+-</script>
+-
+-<template>
+-  <SelectRoot v-bind="forwarded">
+-    <slot />
+-  </SelectRoot>
+-</template>
+diff --git a/src/components/ui/select/SelectContent.vue b/src/components/ui/select/SelectContent.vue
+deleted file mode 100644
+index 024ee8f..0000000
+--- a/src/components/ui/select/SelectContent.vue
++++ /dev/null
+@@ -1,64 +0,0 @@
+-<script setup lang="ts">
+-import { cn } from '@/lib/utils'
+-import {
+-  SelectContent,
+-  type SelectContentEmits,
+-  type SelectContentProps,
+-  SelectPortal,
+-  SelectViewport,
+-  useForwardPropsEmits,
+-} from 'reka-ui'
+-import { computed, type HTMLAttributes } from 'vue'
+-import { SelectScrollDownButton, SelectScrollUpButton } from '.'
+-import { FloatingPortal } from 'reka-ui'
+-import { Transition } from 'vue'
+-
+-defineOptions({
+-  inheritAttrs: false,
+-})
+-
+-const props = withDefaults(
+-  defineProps<SelectContentProps & { class?: HTMLAttributes['class'] }>(),
+-  {
+-    position: 'popper',
+-  },
+-)
+-const emits = defineEmits<SelectContentEmits>()
+-
+-const delegatedProps = computed(() => {
+-  const { class: _, ...delegated } = props
+-
+-  return delegated
+-})
+-
+-const forwarded = useForwardPropsEmits(delegatedProps, emits)
+-</script>
+-
+-<template>
+-  <FloatingPortal>
+-    <Transition
+-      name="select"
+-      @after-leave="afterLeave"
+-    >
+-      <div
+-        ref="contentRef"
+-        v-if="open"
+-        :class="cn(
+-          'z-50 rounded-md overflow-hidden shadow-md',
+-          'bg-black/70 backdrop-blur-lg border border-white/20',
+-          'text-white text-popover-foreground data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 max-h-56',
+-          position === 'popper' &&
+-            'data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1',
+-          props.class,
+-        )"
+-        :style="floatingStyles"
+-      >
+-        <SelectScrollUpButton v-if="select.scrollUpButton" />
+-        <div :class="cn('p-0.5', position === 'popper' && 'max-h-[var(--radix-select-content-available-height)]')">
+-          <slot />
+-        </div>
+-        <SelectScrollDownButton v-if="select.scrollDownButton" />
+-      </div>
+-    </Transition>
+-  </FloatingPortal>
+-</template>
+diff --git a/src/components/ui/select/SelectGroup.vue b/src/components/ui/select/SelectGroup.vue
+deleted file mode 100644
+index d0010e0..0000000
+--- a/src/components/ui/select/SelectGroup.vue
++++ /dev/null
+@@ -1,19 +0,0 @@
+-<script setup lang="ts">
+-import { cn } from '@/lib/utils'
+-import { SelectGroup, type SelectGroupProps } from 'reka-ui'
+-import { computed, type HTMLAttributes } from 'vue'
+-
+-const props = defineProps<SelectGroupProps & { class?: HTMLAttributes['class'] }>()
+-
+-const delegatedProps = computed(() => {
+-  const { class: _, ...delegated } = props
+-
+-  return delegated
+-})
+-</script>
+-
+-<template>
+-  <SelectGroup :class="cn('p-1 w-full', props.class)" v-bind="delegatedProps">
+-    <slot />
+-  </SelectGroup>
+-</template>
+diff --git a/src/components/ui/select/SelectItem.vue b/src/components/ui/select/SelectItem.vue
+deleted file mode 100644
+index 3c3545f..0000000
+--- a/src/components/ui/select/SelectItem.vue
++++ /dev/null
+@@ -1,38 +0,0 @@
+-<script setup lang="ts">
+-import { CheckIcon } from 'lucide-vue-next'
+-import { computed, inject, type HTMLAttributes } from 'vue'
+-import { cn } from '@/lib/utils'
+-
+-const props = defineProps<{
+-  disabled?: boolean
+-  value: string
+-  class?: string
+-}>()
+-
+-const select = inject('select', {})
+-
+-const isHorizontal = computed(() => select?.orientation === 'horizontal')
+-const isSelected = computed(() => props.value === select?.value?.value)
+-
+-const baseClasses = computed(() => {
+-  return cn(
+-    'relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none',
+-    isHorizontal.value ? 'items-center' : '',
+-    props.disabled && 'pointer-events-none opacity-50',
+-    isSelected.value ? 'bg-white/5 text-white' : 'text-white/80 hover:bg-white/10',
+-    props.class,
+-  )
+-})
+-</script>
+-
+-<template>
+-  <SelectItemImpl
+-    v-bind="{ ...$attrs, disabled: props.disabled, value: props.value }"
+-    :class="baseClasses"
+-  >
+-    <span v-if="isSelected" class="absolute left-2 flex h-3.5 w-3.5 items-center justify-center text-white">
+-      <CheckIcon class="h-4 w-4" />
+-    </span>
+-    <slot />
+-  </SelectItemImpl>
+-</template>
+diff --git a/src/components/ui/select/SelectItemText.vue b/src/components/ui/select/SelectItemText.vue
+deleted file mode 100644
+index a4bcea8..0000000
+--- a/src/components/ui/select/SelectItemText.vue
++++ /dev/null
+@@ -1,11 +0,0 @@
+-<script setup lang="ts">
+-import { SelectItemText, type SelectItemTextProps } from 'reka-ui'
+-
+-const props = defineProps<SelectItemTextProps>()
+-</script>
+-
+-<template>
+-  <SelectItemText v-bind="props">
+-    <slot />
+-  </SelectItemText>
+-</template>
+diff --git a/src/components/ui/select/SelectLabel.vue b/src/components/ui/select/SelectLabel.vue
+deleted file mode 100644
+index 26433d4..0000000
+--- a/src/components/ui/select/SelectLabel.vue
++++ /dev/null
+@@ -1,13 +0,0 @@
+-<script setup lang="ts">
+-import type { HTMLAttributes } from 'vue'
+-import { cn } from '@/lib/utils'
+-import { SelectLabel, type SelectLabelProps } from 'reka-ui'
+-
+-const props = defineProps<SelectLabelProps & { class?: HTMLAttributes['class'] }>()
+-</script>
+-
+-<template>
+-  <SelectLabel :class="cn('px-2 py-1.5 text-sm font-semibold', props.class)">
+-    <slot />
+-  </SelectLabel>
+-</template>
+diff --git a/src/components/ui/select/SelectScrollDownButton.vue b/src/components/ui/select/SelectScrollDownButton.vue
+deleted file mode 100644
+index c9beb57..0000000
+--- a/src/components/ui/select/SelectScrollDownButton.vue
++++ /dev/null
+@@ -1,24 +0,0 @@
+-<script setup lang="ts">
+-import { cn } from '@/lib/utils'
+-import { ChevronDown } from 'lucide-vue-next'
+-import { SelectScrollDownButton, type SelectScrollDownButtonProps, useForwardProps } from 'reka-ui'
+-import { computed, type HTMLAttributes } from 'vue'
+-
+-const props = defineProps<SelectScrollDownButtonProps & { class?: HTMLAttributes['class'] }>()
+-
+-const delegatedProps = computed(() => {
+-  const { class: _, ...delegated } = props
+-
+-  return delegated
+-})
+-
+-const forwardedProps = useForwardProps(delegatedProps)
+-</script>
+-
+-<template>
+-  <SelectScrollDownButton v-bind="forwardedProps" :class="cn('flex cursor-default items-center justify-center py-1', props.class)">
+-    <slot>
+-      <ChevronDown />
+-    </slot>
+-  </SelectScrollDownButton>
+-</template>
+diff --git a/src/components/ui/select/SelectScrollUpButton.vue b/src/components/ui/select/SelectScrollUpButton.vue
+deleted file mode 100644
+index 49b83c9..0000000
+--- a/src/components/ui/select/SelectScrollUpButton.vue
++++ /dev/null
+@@ -1,24 +0,0 @@
+-<script setup lang="ts">
+-import { cn } from '@/lib/utils'
+-import { ChevronUp } from 'lucide-vue-next'
+-import { SelectScrollUpButton, type SelectScrollUpButtonProps, useForwardProps } from 'reka-ui'
+-import { computed, type HTMLAttributes } from 'vue'
+-
+-const props = defineProps<SelectScrollUpButtonProps & { class?: HTMLAttributes['class'] }>()
+-
+-const delegatedProps = computed(() => {
+-  const { class: _, ...delegated } = props
+-
+-  return delegated
+-})
+-
+-const forwardedProps = useForwardProps(delegatedProps)
+-</script>
+-
+-<template>
+-  <SelectScrollUpButton v-bind="forwardedProps" :class="cn('flex cursor-default items-center justify-center py-1', props.class)">
+-    <slot>
+-      <ChevronUp />
+-    </slot>
+-  </SelectScrollUpButton>
+-</template>
+diff --git a/src/components/ui/select/SelectSeparator.vue b/src/components/ui/select/SelectSeparator.vue
+deleted file mode 100644
+index cbfae60..0000000
+--- a/src/components/ui/select/SelectSeparator.vue
++++ /dev/null
+@@ -1,17 +0,0 @@
+-<script setup lang="ts">
+-import { cn } from '@/lib/utils'
+-import { SelectSeparator, type SelectSeparatorProps } from 'reka-ui'
+-import { computed, type HTMLAttributes } from 'vue'
+-
+-const props = defineProps<SelectSeparatorProps & { class?: HTMLAttributes['class'] }>()
+-
+-const delegatedProps = computed(() => {
+-  const { class: _, ...delegated } = props
+-
+-  return delegated
+-})
+-</script>
+-
+-<template>
+-  <SelectSeparator v-bind="delegatedProps" :class="cn('-mx-1 my-1 h-px bg-muted', props.class)" />
+-</template>
+diff --git a/src/components/ui/select/SelectTrigger.vue b/src/components/ui/select/SelectTrigger.vue
+deleted file mode 100644
+index b78ecf2..0000000
+--- a/src/components/ui/select/SelectTrigger.vue
++++ /dev/null
+@@ -1,31 +0,0 @@
+-<script setup lang="ts">
+-import { cn } from '@/lib/utils'
+-import { ChevronDown } from 'lucide-vue-next'
+-import { SelectIcon, SelectTrigger, type SelectTriggerProps, useForwardProps } from 'reka-ui'
+-import { computed, type HTMLAttributes } from 'vue'
+-
+-const props = defineProps<SelectTriggerProps & { class?: HTMLAttributes['class'] }>()
+-
+-const delegatedProps = computed(() => {
+-  const { class: _, ...delegated } = props
+-
+-  return delegated
+-})
+-
+-const forwardedProps = useForwardProps(delegatedProps)
+-</script>
+-
+-<template>
+-  <SelectTrigger
+-    v-bind="forwardedProps"
+-    :class="cn(
+-      'flex h-9 w-full items-center justify-between whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background data-[placeholder]:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&>span]:truncate text-start',
+-      props.class,
+-    )"
+-  >
+-    <slot />
+-    <SelectIcon as-child>
+-      <ChevronDown class="w-4 h-4 opacity-50 shrink-0" />
+-    </SelectIcon>
+-  </SelectTrigger>
+-</template>
+diff --git a/src/components/ui/select/SelectValue.vue b/src/components/ui/select/SelectValue.vue
+deleted file mode 100644
+index 5ed42d1..0000000
+--- a/src/components/ui/select/SelectValue.vue
++++ /dev/null
+@@ -1,11 +0,0 @@
+-<script setup lang="ts">
+-import { SelectValue, type SelectValueProps } fr

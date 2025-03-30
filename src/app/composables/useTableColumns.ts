@@ -1,5 +1,6 @@
 import { ref, computed } from 'vue'
 import type { ColumnDefinition, TableColumnOptions } from '@/app/types'
+import { apiErrorState } from '@/app/composables/useApiErrorState'
 
 export function useTableColumns(options: TableColumnOptions) {
   const { persistKey, initialColumns = [] } = options
@@ -16,7 +17,10 @@ export function useTableColumns(options: TableColumnOptions) {
         }))
       }
     } catch (error) {
-      console.error('Erro ao carregar configuração de colunas:', error)
+      apiErrorState.setError(
+        error instanceof Error ? error : new Error(String(error)),
+        'Carregamento de configuração de colunas',
+      )
     }
 
     return initialColumns
@@ -39,7 +43,10 @@ export function useTableColumns(options: TableColumnOptions) {
 
       localStorage.setItem(`table-columns-${persistKey}`, JSON.stringify(visibilityMap))
     } catch (error) {
-      console.error('Erro ao salvar configuração de colunas:', error)
+      apiErrorState.setError(
+        error instanceof Error ? error : new Error(String(error)),
+        'Salvamento de configuração de colunas',
+      )
     }
   }
 

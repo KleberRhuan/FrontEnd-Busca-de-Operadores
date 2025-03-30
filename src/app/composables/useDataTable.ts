@@ -12,18 +12,19 @@ import {
   type FetchOperatorsParams,
   type PaginatedResponse,
   SortableFields,
-  SortDirection,
 } from '@/app/types'
 import { API_CONFIG } from '@/app/config/api.ts'
-import { errorHandler } from '@/app/utils/exceptionHandler'
+import { apiErrorState } from '@/app/composables/useApiErrorState'
 
 export function useDataTable<T extends Record<string, unknown>>(options: DataTableOptions<T>) {
   const {
     columns: initialColumns,
     persistKey,
     defaultPageSize = 10,
-    globalDebounce = 1500,
+    globalDebounce = 1000,
   } = options
+
+  const { error, setError, clearError, wrap } = apiErrorState
 
   const { columns, visibleColumns, toggleColumnVisibility, isColumnVisible, resetColumns } =
     useTableColumns({
@@ -31,38 +32,20 @@ export function useDataTable<T extends Record<string, unknown>>(options: DataTab
       initialColumns,
     })
 
-  const {
-    sortParams,
-    handleSortFieldChange: rawHandleSortFieldChange,
-    handleSortDirectionChange: rawHandleSortDirectionChange,
-    toggleSortDirection: rawToggleSortDirection,
-  } = useSorting()
-
-  const handleSortFieldChange = (field: SortableFields) => {
-    try {
-      rawHandleSortFieldChange(field)
-    } catch (error) {
-      errorHandler.handle(error, 'Alteração de campo de ordenação')
-    }
+  const handleSort = (field: SortableFields) => {
+    updateSort(field)
+    resetPage()
   }
 
-  const handleSortDirectionChange = (order: SortDirection) => {
-    try {
-      rawHandleSortDirectionChange(order)
-    } catch (error) {
-      errorHandler.handle(error, 'Alteração de direção de ordenação')
-    }
-  }
-
-  // Nova função para alternar a direção de ordenação
   const toggleSortDirection = () => {
-    try {
-      console.log('Alternando direção de ordenação')
-      rawToggleSortDirection()
-    } catch (error) {
-      errorHandler.handle(error, 'Alternância de direção de ordenação')
-    }
+    rawToggleSortDirection()
+    resetPage()
   }
+
+  const handlePageChange = (page: number) => rawHandlePageChange(page)
+  const handlePageSizeChange = (size: number) => rawHandlePageSizeChange(size)
+
+  const { sortParams, updateSort, toggleSortDirection: rawToggleSortDirection } = useSorting()
 
   const {
     pagination,
@@ -72,32 +55,10 @@ export function useDataTable<T extends Record<string, unknown>>(options: DataTab
     resetPage,
   } = usePagination(1, defaultPageSize)
 
-  const handlePageChange = (page: number) => {
-    try {
-      rawHandlePageChange(page)
-    } catch (error) {
-      errorHandler.handle(error, 'Mudança de página')
-    }
-  }
-
-  const handlePageSizeChange = (size: number) => {
-    try {
-      rawHandlePageSizeChange(size)
-    } catch (error) {
-      errorHandler.handle(error, 'Alteração de itens por página')
-    }
-  }
-
   const { searchTerm, handleSearch, clearSearch } = useSearch({
     onSearch: () => resetPage(),
     minLength: 2,
   })
-
-  const items = ref<T[]>([])
-  const isEmpty = computed(() => !items.value || items.value.length === 0)
-  const total = ref(0)
-  const error = ref<Error | null>(null)
-  const debouncingRequest = ref(false)
 
   const fetchParams = computed<FetchOperatorsParams>(() => ({
     page: pagination.value.page,
@@ -107,7 +68,27 @@ export function useDataTable<T extends Record<string, unknown>>(options: DataTab
     sortDirection: sortParams.value.sortDirection,
   }))
 
+  const items = ref<T[]>([])
+  const isEmpty = computed(() => !items.value || items.value.length === 0)
+  const total = ref(0)
+  const debouncingRequest = ref(false)
   const actualFetchParams = ref<FetchOperatorsParams>(fetchParams.value)
+
+  const filteredFetchParams = computed(() => {
+    const params = actualFetchParams.value
+    return Object.fromEntries(
+      Object.entries(params).filter(
+        ([_, value]) => value !== null && value !== undefined && value !== '',
+      ),
+    )
+  })
+
+  const {
+    data: response,
+    isLoading: isLoadingFetch,
+    refresh: rawRefresh,
+    error: apiError,
+  } = useSwrvCache<PaginatedResponse<T>>(API_CONFIG.ENDPOINTS.OPERATORS, filteredFetchParams)
 
   const updateAndRefresh = useDebounceFn(async (newParams: FetchOperatorsParams) => {
     const newParamsString = JSON.stringify(newParams)
@@ -118,14 +99,6 @@ export function useDataTable<T extends Record<string, unknown>>(options: DataTab
       debouncingRequest.value = false
     }
   }, globalDebounce)
-
-  watch(
-    sortParams,
-    (newValue, oldValue) => {
-      console.log('sortParams mudou de', oldValue, 'para', newValue)
-    },
-    { deep: true, immediate: true },
-  )
 
   watch(
     fetchParams,
@@ -140,22 +113,9 @@ export function useDataTable<T extends Record<string, unknown>>(options: DataTab
     { deep: true },
   )
 
-  const filteredFetchParams = computed(() => {
-    const params = actualFetchParams.value;
-    return Object.fromEntries(
-      Object.entries(params).filter(([_, value]) => value !== null && value !== undefined && value !== '')
-    );
-  });
-
-  const {
-    data: response,
-    isLoading: isLoadingFetch,
-    refresh: rawRefresh,
-    error: apiError,
-  } = useSwrvCache<PaginatedResponse<T>>(API_CONFIG.ENDPOINTS.OPERATORS, filteredFetchParams)
-
-  const refresh = errorHandler.withErrorHandling(async () => {
-    error.value = null
+  // Função de refresh com tratamento de erro centralizado
+  const refresh = wrap(async () => {
+    clearError()
     return await rawRefresh()
   }, 'Atualização de dados')
 
@@ -164,9 +124,7 @@ export function useDataTable<T extends Record<string, unknown>>(options: DataTab
     apiError,
     (newError) => {
       if (newError) {
-        console.error('Erro ao carregar dados:', newError)
-        error.value = newError
-        errorHandler.handle(newError, 'Carregamento de dados')
+        setError(newError, 'Carregamento de dados')
       }
     },
     { immediate: true },
@@ -178,29 +136,25 @@ export function useDataTable<T extends Record<string, unknown>>(options: DataTab
     (dataResponse) => {
       try {
         if (dataResponse) {
-          console.log('dataResponse', dataResponse)
           const responseData = dataResponse.data as unknown as PaginatedResponse<T>
           items.value = responseData.data
           total.value = responseData.totalItems
           updatePaginationInfo(responseData.totalItems, Number(responseData.totalPages))
         }
       } catch (err) {
-        errorHandler.handle(err, 'Processamento de resposta')
+        setError(err instanceof Error ? err : new Error(String(err)), 'Processamento de resposta')
       }
     },
-    { immediate: true }
+    { immediate: true },
   )
 
-  const reset = async () => {
-    try {
-      clearSearch()
-      resetPage()
-      actualFetchParams.value = fetchParams.value
-      await refresh()
-    } catch (err) {
-      errorHandler.handle(err, 'Reset de dados')
-    }
-  }
+  // Reset com tratamento de erro centralizado
+  const reset = wrap(async () => {
+    clearSearch()
+    resetPage()
+    actualFetchParams.value = fetchParams.value
+    await refresh()
+  }, 'Reset de dados')
 
   const maxPage = computed(() => pagination.value.totalPages)
   const displayRange = computed(() => {
@@ -209,7 +163,7 @@ export function useDataTable<T extends Record<string, unknown>>(options: DataTab
       const end = Math.min(pagination.value.page * pagination.value.pageSize, total.value)
       return { start, end }
     } catch (err) {
-      errorHandler.handle(err, 'Cálculo de intervalo')
+      setError(err instanceof Error ? err : new Error(String(err)), 'Cálculo de intervalo')
       return { start: 0, end: 0 }
     }
   })
@@ -238,8 +192,7 @@ export function useDataTable<T extends Record<string, unknown>>(options: DataTab
     refresh,
     reset,
 
-    handleSortFieldChange,
-    handleSortDirectionChange: handleSortDirectionChange,
     toggleSortDirection: toggleSortDirection,
+    handleSort,
   }
 }
