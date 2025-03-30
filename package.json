@@ -1,6 +1,7 @@
 {
   "name": "intuitive-care",
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "author": "Kleber Rhuam <kleber_rhuan@hotmail.com",
   "private": true,
   "type": "module",
   "scripts": {
@@ -12,7 +13,10 @@
     "lint:oxlint": "oxlint . --fix -D correctness --ignore-path .gitignore",
     "lint:eslint": "eslint . --fix",
     "lint": "run-s lint:*",
-    "format": "prettier --write src/"
+    "format": "prettier --write src/",
+    "docker:build": "docker build -t intuitive-care:latest .",
+    "docker:run": "docker run -d -p 8080:80 --name intuitive-care intuitive-care:latest",
+    "docker": "chmod +x docker-build.sh && ./docker-build.sh"
   },
   "dependencies": {
     "@headlessui/vue": "^1.7.23",
