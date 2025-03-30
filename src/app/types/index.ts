@@ -15,3 +15,6 @@ export * from './domain/operator'
 
 // UI - componentes e interfaces gráficas
 export * from './ui/table'
+
+// Errors - tipos relacionados a erros
+export * from './errors'
