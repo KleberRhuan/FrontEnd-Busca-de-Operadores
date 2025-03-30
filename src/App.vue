@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import DataTable from '@/components/data-table/DataTable.vue'
+import SocialLinks from '@/components/ui/SocialLinks.vue'
 import { columns } from '@/app/utils/columns'
 
 onMounted(() => {
@@ -29,8 +30,13 @@ onMounted(() => {
         </div>
       </div>
 
-      <footer class="mt-4 text-center text-white/40 text-sm font-light w-full">
-        <p>Sistema de Cadastro de Operadores &copy; {{ new Date().getFullYear() }}</p>
+      <footer class="mt-4 text-center w-full">
+        <div class="max-w-md mx-auto px-4 pb-4 flex flex-col items-center">
+          <SocialLinks class="mb-3" />
+          <p class="text-white/40 text-sm font-light">
+            Sistema de Cadastro de Operadores &copy; {{ new Date().getFullYear() }} (Kleber Rhuan)
+          </p>
+        </div>
       </footer>
     </div>
   </main>
