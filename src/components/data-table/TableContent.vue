@@ -1,13 +1,11 @@
 <template>
   <TableBody>
     <template v-if="loading">
-      <div class="w-full h-full flex items-center justify-center">
-        <Loader2Icon class="h-16 w-16 animate-spin text-primary" />
-      </div>
+      <LoadingState />
     </template>
     <template v-else-if="error">
       <TableRow
-        class="w-full grid h-full flex items-center justify-center"
+        class="w-full grid h-full items-center justify-center"
         :style="gridTemplateColumnsStyle"
       >
         <TableCell :colspan="columns.length" class="col-span-full">
@@ -32,16 +30,23 @@
           :key="`${tableContentHelper.getItemKey(item) || index}-${column.id}`"
           class="text-white/80 py-3 min-h-[56px] px-3 flex items-center justify-center text-center"
         >
-          <div class="w-full text-center truncate" :title="formatCellValue(item, column)">
-            {{ formatCellValue(item, column) }}
-          </div>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger as-child>
+                <div class="w-full text-center truncate" :title="formatCellValue(item, column)">
+                  {{ formatCellValue(item, column) }}
+                </div>
+              </TooltipTrigger>
+              <TooltipContent>
+                {{ formatCellValue(item, column) }}
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </TableCell>
       </TableRow>
     </template>
-    <template v-else>
-      <div class="w-full h-full flex items-center justify-center">
-        <p class="text-white/80 text-center text-lg font-medium">Nenhum operador encontrado.</p>
-      </div>
+    <template v-else-if="empty">
+      <EmptyState />
     </template>
   </TableBody>
 </template>
@@ -49,10 +54,12 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { TableBody, TableCell, TableRow } from '@/components/ui/table/index'
-import { Loader2Icon } from 'lucide-vue-next'
 import { type ColumnDefinition, SortableFields } from '@/app/types'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import TableContentHelper from '@/app/utils/TableContentHelper.ts'
 import ErrorState from './ErrorState.vue'
+import LoadingState from './LoadingState.vue'
+import EmptyState from './EmptyState.vue'
 
 const props = withDefaults(
   defineProps<{
@@ -109,7 +116,6 @@ const formatCellValue = (item: Record<string, unknown>, column: ColumnDefinition
     formatted = tableContentHelper.formatDefault(value)
   }
 
-  // Armazenar no cache
   formatCache.set(cacheKey, formatted)
   return formatted
 }

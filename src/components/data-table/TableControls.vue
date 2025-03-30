@@ -9,7 +9,7 @@
 
       <!-- Ícone de loading que aparece sobre o ícone de pesquisa -->
       <LoaderIcon
-        v-if="isActuallySearching"
+        v-if="isLoading"
         class="search-loading absolute left-5 top-1/2 transform -translate-y-1/2 h-4 w-4 text-primary animate-spin"
       />
 
@@ -27,10 +27,10 @@
       variant="default"
       class="refresh-button bg-transparent border border-white/10 hover:bg-white/20 hover:border-white/30 text-white/90 hover:text-white backdrop-blur-sm text-sm font-medium rounded-full px-4 py-2 h-10 transition-all shadow-sm ml-auto mt-0 md:mt-0"
       @click="onRefresh"
-      :disabled="isActuallySearching"
+      :disabled="isLoading"
       aria-label="Atualizar dados"
     >
-      <RefreshCcwIcon v-if="!isActuallyRefreshing" class="mr-1.5 h-3.5 w-3.5" />
+      <RefreshCcwIcon v-if="!isLoading" class="mr-1.5 h-3.5 w-3.5" />
       <LoaderIcon v-else class="mr-1.5 h-3.5 w-3.5 animate-spin" />
       <span>Atualizar</span>
     </Button>
@@ -45,8 +45,7 @@ import { RefreshCcwIcon, SearchIcon, LoaderIcon } from 'lucide-vue-next'
 import { useDebounceFn } from '@vueuse/core'
 
 const props = defineProps<{
-  isSearching?: boolean
-  isRefreshing?: boolean
+  isLoading?: boolean
   search_term?: string
 }>()
 
@@ -72,8 +71,7 @@ watch(
   { immediate: true },
 )
 
-const isActuallySearching = computed(() => Boolean(props.isSearching))
-const isActuallyRefreshing = computed(() => Boolean(props.isRefreshing))
+const isLoading = computed(() => Boolean(props.isLoading))
 
 const debouncedSearch = useDebounceFn(() => {
   emit('search', searchTerm.value)

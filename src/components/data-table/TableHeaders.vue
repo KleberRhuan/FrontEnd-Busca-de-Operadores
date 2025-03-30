@@ -7,8 +7,8 @@
         v-memo="[
           column.id,
           column.sortable,
-          currentSortField === column.id,
-          currentSortField === column.id ? currentSortDirection : '',
+          currentSortedField === column.id,
+          currentSortedField === column.id ? currentSortedDirection : '',
         ]"
         :class="getHeaderClasses(column)"
         @click="column.sortable ? handleSorting(column.id as SortableFields) : null"
@@ -17,18 +17,16 @@
           <p
             class="whitespace-nowrap overflow-hidden text-ellipsis text-center"
             :title="column.title"
-            @click.stop="column.sortable ? handleSortFieldClick(column.id as SortableFields) : null"
           >
             {{ column.title }}
           </p>
 
           <SortingIcon
             v-if="column.sortable"
-            :is-active="currentSortField === column.id"
-            :direction="currentSortField === column.id ? currentSortDirection : undefined"
+            :is-active="currentSortedField === column.id"
+            :direction="currentSortedField === column.id ? currentSortedDirection : undefined"
             :field="column.id as SortableFields"
             class="ml-1 flex-shrink-0"
-            @click.stop="handleSortDirectionClick(column.id as SortableFields)"
           />
         </div>
       </TableHead>
@@ -37,19 +35,18 @@
 </template>
 
 <script setup lang="ts">
-import { computed, defineComponent, h, markRaw } from 'vue'
+import { computed, defineComponent, h, markRaw, type PropType } from 'vue'
 import { TableHead, TableHeader, TableRow } from '@/components/ui/table/index'
 import { ArrowUpIcon, ArrowDownIcon, ArrowUpDownIcon } from 'lucide-vue-next'
-import { SortDirection, type ColumnDefinition, SortableFields } from '@/app/types'
+import { SortDirection, type ColumnDefinition, SortableFields, type SortConfig } from '@/app/types'
 
 const props = defineProps<{
   columns: ColumnDefinition[]
-  sortParams: Record<string, string>
+  sortParams: SortConfig
   minColumnWidth?: number
 }>()
 
-// Definir valores padrão para props opcionais
-const minColumnWidth = props.minColumnWidth || 160
+const minColumnWidth = props.minColumnWidth || 180
 
 // Computed para grid de colunas - responsivo horizontal
 const gridTemplateColumnsStyle = computed(() => {
@@ -58,8 +55,6 @@ const gridTemplateColumnsStyle = computed(() => {
 
 const emit = defineEmits<{
   (e: 'sort', field: SortableFields): void
-  (e: 'sort-field', field: SortableFields): void
-  (e: 'sort-order', order: SortDirection): void
   (e: 'toggle-order'): void
 }>()
 
@@ -68,7 +63,7 @@ const SortingIcon = markRaw(
   defineComponent({
     props: {
       isActive: Boolean,
-      direction: String,
+      direction: String as PropType<SortDirection | null>,
       field: String,
     },
     setup(props) {
@@ -90,8 +85,13 @@ const SortingIcon = markRaw(
   }),
 )
 
-const currentSortField = computed(() => props.sortParams.field)
-const currentSortDirection = computed(() => props.sortParams.order)
+const currentSortedField = computed(() => {
+  return props.sortParams.sortField
+})
+
+const currentSortedDirection = computed(() => {
+  return props.sortParams.sortDirection
+})
 
 const headerClassesCache = new Map()
 const getHeaderClasses = (column: ColumnDefinition) => {
@@ -101,7 +101,9 @@ const getHeaderClasses = (column: ColumnDefinition) => {
 
   const classes = [
     'text-white/90 font-medium flex items-center justify-center text-center',
-    { 'cursor-pointer hover:bg-white/10 transition-colors': column.sortable },
+    {
+      'cursor-pointer hover:bg-white/10 transition-colors': column.sortable,
+    },
   ]
 
   headerClassesCache.set(column.id, classes)
@@ -109,19 +111,10 @@ const getHeaderClasses = (column: ColumnDefinition) => {
 }
 
 const handleSorting = (field: SortableFields) => {
-  emit('sort', field)
-}
-
-const handleSortFieldClick = (field: SortableFields) => {
-  emit('sort-field', field)
-}
-
-const handleSortDirectionClick = (field: SortableFields) => {
-  if (field === currentSortField.value) {
+  if (field === currentSortedField.value) {
     emit('toggle-order')
-  } else {
-    emit('sort-field', field)
-    emit('sort-order', SortDirection.DESC)
+    return
   }
+  emit('sort', field)
 }
 </script>
