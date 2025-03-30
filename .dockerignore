@@ -1,0 +1,107 @@
+# Sistema de controle de versão
+.git
+.github
+.gitignore
+.gitattributes
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Arquivos de ambiente (exceto os padrões)
+.env.local
+.env.*.local
+
+# Dependências
+node_modules
+.pnpm-store
+
+# Build e cache
+dist
+dist-ssr
+*.local
+.vite
+.vite-ssg
+.output
+.nuxt
+.nitro
+.cache
+.turbo
+
+# Configurações de IDE e editor
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.DS_Store
+
+# Arquivos de teste
+coverage
+/cypress/videos/
+/cypress/screenshots/
+
+# Arquivos Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Documentação
+*.md
+LICENSE
+
+# Diretórios node
+node_modules
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# Arquivos e diretórios de build
+/dist
+/build
+/.build
+/.cache
+
+# Arquivos de ambiente (para não copiar, já que definimos ENV no Dockerfile)
+.env
+.env.*
+!.env.example
+
+# Arquivos de sistema
+.DS_Store
+Thumbs.db
+
+# Arquivos de editor/IDE
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Arquivos de teste
+/coverage
+/tests
+**/*.spec.js
+**/*.spec.ts
+**/*.test.js
+**/*.test.ts
+
+# Arquivos Docker
+Dockerfile
+.dockerignore
+docker-compose.yml
+docker-compose.yaml
+
+# Outros arquivos de configuração
+README.md
+LICENSE 
