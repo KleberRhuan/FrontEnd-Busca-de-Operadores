@@ -26,7 +26,7 @@
             <ChevronLeftIcon class="h-3.5 w-3" />
           </Button>
         </div>
-        
+
         <div class="flex items-center space-x-1 flex-grow justify-center">
           <div class="flex items-center space-x-1">
             <span class="text-xs font-medium text-white/80">Página</span>
@@ -35,7 +35,7 @@
             <span class="bg-black/30 px-1.5 py-1 rounded text-xs font-medium text-white border border-white/20">{{ totalPages || 1 }}</span>
           </div>
         </div>
-        
+
         <div class="flex items-center space-x-1">
           <Button
             variant="ghost"
@@ -60,7 +60,7 @@
             <ChevronLastIcon class="h-3.5 w-3" />
           </Button>
         </div>
-        
+
         <div class="hidden md:flex items-center pl-2 border-l border-white/20">
           <div class="flex items-center justify-center">
             <span class="text-xs font-medium text-white/70 mr-1">Itens</span>
@@ -86,40 +86,46 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button'
 import { ChevronLeftIcon, ChevronRightIcon, ChevronFirstIcon, ChevronLastIcon } from 'lucide-vue-next'
+import { computed } from 'vue'
+import type {PaginationState} from "@/app/types";
+import {API_CONFIG} from "@/app/config/api.ts";
 
-// Opções padrão de tamanho de página
-const pageSizeOptions = [10, 20, 30, 50, 100]
+const pageSizeOptions = API_CONFIG.PAGINATION.PAGE_SIZE_OPTIONS
 
 const props = defineProps<{
-  currentPage: number;
-  totalPages: number;
-  pageSize: number;
-}>()
+  pagination: PaginationState;
+}>();
+
+const currentPage = computed(() => props.pagination.page);
+const totalPages = computed(() => props.pagination.totalPages);
+const pageSize = computed(() => props.pagination.pageSize);
 
 const emit = defineEmits<{
-  (e: 'pageChange', page: number): void;
-  (e: 'pageSizeChange', pageSize: number): void;
-}>()
+  (e: 'page-change', page: number): void;
+  (e: 'page-size-change', pageSize: number): void;
+}>();
 
 const onPageChange = (page: number) => {
-  emit('pageChange', page)
-}
+  emit('page-change', page);
+};
 
 const onPageSizeChange = (event: Event) => {
-  const select = event.target as HTMLSelectElement
-  emit('pageSizeChange', parseInt(select.value))
-}
+  const select = event.target as HTMLSelectElement;
+  emit('page-size-change', parseInt(select.value));
+};
 </script>
 
 <style scoped>
 select {
   appearance: none;
+  text-align: center;
+  padding-left: 0 !important;
+  padding-right: 12px !important; /* Espaço para a seta */
 }
 
 .items-per-page {
-  text-align: center;
-  padding-right: 8px !important;
   font-weight: 500;
+  text-align-last: center; /* Propriedade específica para centralizar opções em selects */
 }
 
 .select-wrapper {
@@ -128,7 +134,7 @@ select {
 }
 
 /* Adicionar seta customizada */
-.select-wrapper::before {
+.select-wrapper::after {
   content: '';
   position: absolute;
   right: 8px;

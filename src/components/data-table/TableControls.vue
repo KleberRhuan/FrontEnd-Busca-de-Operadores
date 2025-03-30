@@ -3,32 +3,34 @@
     <!-- Campo de pesquisa -->
     <div class="relative flex-1 max-w-full w-full md:max-w-md">
       <!-- Ícone fixo de pesquisa -->
-      <SearchIcon class="search-icon absolute left-5 top-1/2 transform -translate-y-1/2 h-4 w-4 text-white/60" />
-      
-      <!-- Ícone de loading que aparece sobre o ícone de pesquisa -->
-      <LoaderIcon 
-        v-if="isActuallySearching" 
-        class="search-loading absolute left-5 top-1/2 transform -translate-y-1/2 h-4 w-4 text-primary animate-spin" 
+      <SearchIcon
+        class="search-icon absolute left-5 top-1/2 transform -translate-y-1/2 h-4 w-4 text-white/60"
       />
-      
-      <Input 
-        placeholder="Pesquisar operadores..." 
+
+      <!-- Ícone de loading que aparece sobre o ícone de pesquisa -->
+      <LoaderIcon
+        v-if="isActuallySearching"
+        class="search-loading absolute left-5 top-1/2 transform -translate-y-1/2 h-4 w-4 text-primary animate-spin"
+      />
+
+      <Input
+        placeholder="Pesquisar operadores..."
         class="pl-12 py-6 bg-black/40 border-white/20 backdrop-blur-md text-white rounded-full shadow-lg placeholder:text-white/50 focus-visible:ring-white/40 focus-visible:border-white/30 w-full"
         v-model="searchTerm"
         @input="onSearchInput"
         aria-label="Pesquisar operadores"
       />
     </div>
-    
+
     <!-- Botão de atualização -->
-    <Button 
-      variant="default" 
+    <Button
+      variant="default"
       class="refresh-button bg-transparent border border-white/10 hover:bg-white/20 hover:border-white/30 text-white/90 hover:text-white backdrop-blur-sm text-sm font-medium rounded-full px-4 py-2 h-10 transition-all shadow-sm ml-auto mt-0 md:mt-0"
       @click="onRefresh"
       :disabled="isActuallySearching"
       aria-label="Atualizar dados"
     >
-      <RefreshCcwIcon v-if="!isRefreshing" class="mr-1.5 h-3.5 w-3.5" />
+      <RefreshCcwIcon v-if="!isActuallyRefreshing" class="mr-1.5 h-3.5 w-3.5" />
       <LoaderIcon v-else class="mr-1.5 h-3.5 w-3.5 animate-spin" />
       <span>Atualizar</span>
     </Button>
@@ -36,62 +38,65 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onUnmounted, watch, computed } from 'vue';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { RefreshCcwIcon, SearchIcon, LoaderIcon } from 'lucide-vue-next';
-
-// Tipagem para as colunas
-interface TableColumn {
-  id: string;
-  title: string;
-  isVisible: boolean;
-  toggleVisibility: () => void;
-}
+import { ref, computed, watch } from 'vue'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { RefreshCcwIcon, SearchIcon, LoaderIcon } from 'lucide-vue-next'
+import { useDebounceFn } from '@vueuse/core'
 
 const props = defineProps<{
-  columns: TableColumn[];
-  isSearching?: boolean;
-  isRefreshing?: boolean;
-}>();
+  isSearching?: boolean
+  isRefreshing?: boolean
+  search_term?: string
+}>()
 
 const emit = defineEmits<{
-  (e: 'search', term: string): void;
-  (e: 'refresh'): void;
-}>();
+  (e: 'search', term: string): void
+  (e: 'refresh'): void
+}>()
 
-const searchTerm = ref('');
+const searchTerm = ref(props.search_term || '')
 
-// Garantir que isSearching seja tratado como booleano
-const isActuallySearching = computed(() => Boolean(props.isSearching));
+watch(
+  () => props.search_term,
+  (newValue) => {
+    if (
+      newValue !== undefined &&
+      newValue !== searchTerm.value &&
+      newValue !== '' &&
+      newValue.length > 2
+    ) {
+      searchTerm.value = newValue
+    }
+  },
+  { immediate: true },
+)
 
-/**
- * Emite o evento de pesquisa imediatamente
- * O debounce será gerenciado pelo componente pai
- */
+const isActuallySearching = computed(() => Boolean(props.isSearching))
+const isActuallyRefreshing = computed(() => Boolean(props.isRefreshing))
+
+const debouncedSearch = useDebounceFn(() => {
+  emit('search', searchTerm.value)
+}, 1000)
+
 const onSearchInput = () => {
-  emit('search', searchTerm.value);
-};
+  debouncedSearch()
+}
 
-/**
- * Aciona o evento de atualização de dados
- */
 const onRefresh = () => {
-  emit('refresh');
-};
+  emit('refresh')
+}
 </script>
 
 <style scoped>
-/* Garante que o ícone de pesquisa esteja visível e corretamente posicionado */
 .search-icon {
   pointer-events: none;
   z-index: 10;
 }
 
-/* Estilo para o ícone de carregamento */
 .search-loading {
   pointer-events: none;
-  z-index: 20; /* Maior que o ícone de busca para ficar por cima */
+  z-index: 20;
 }
 
 input:focus ~ .search-icon {
@@ -123,7 +128,9 @@ input:focus ~ .search-icon {
   background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
   transform: scale(0);
   opacity: 0;
-  transition: transform 0.3s, opacity 0.3s;
+  transition:
+    transform 0.3s,
+    opacity 0.3s;
   pointer-events: none;
 }
 

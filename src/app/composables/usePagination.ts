@@ -1,18 +1,11 @@
-import { ref, computed } from 'vue'
-import type { Ref } from 'vue'
-
-export interface PaginationState {
-  page: number
-  pageSize: number
-  total: number
-  totalPages: number
-}
+import { ref } from 'vue'
+import type { PaginationState } from '@/app/types'
 
 export function usePagination(
   defaultPage: number = 1,
   defaultPageSize: number = 10
 ) {
-  // Estado da paginação
+
   const pagination = ref<PaginationState>({
     page: defaultPage,
     pageSize: defaultPageSize,
@@ -20,7 +13,6 @@ export function usePagination(
     totalPages: 0
   })
 
-  // Handlers para mudanças de página
   const handlePageChange = (page: number) => {
     if (pagination.value.page === page) return false
     pagination.value = { ...pagination.value, page }
@@ -33,21 +25,13 @@ export function usePagination(
     return true
   }
 
-  // Atualizar informações da paginação
   const updatePaginationInfo = (total: number, totalPages: number) => {
-    pagination.value = {
-      ...pagination.value,
-      total,
-      totalPages
-    }
+    pagination.value.total = total
+    pagination.value.totalPages = totalPages
   }
 
-  // Resetar paginação para página 1
   const resetPage = () => {
-    pagination.value = {
-      ...pagination.value,
-      page: 1
-    }
+    pagination.value.page = 1
   }
 
   return {
@@ -57,4 +41,4 @@ export function usePagination(
     updatePaginationInfo,
     resetPage
   }
-} 
+}

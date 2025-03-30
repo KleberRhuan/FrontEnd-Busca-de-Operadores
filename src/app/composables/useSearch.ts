@@ -1,85 +1,55 @@
 import { ref } from 'vue'
-import type { Ref } from 'vue'
+import { useToast } from '@/app/composables/useToast'
 
 export interface SearchOptions {
-  debounceDelay?: number
-  onSearch?: (term: string) => void
+  onSearch?: (value: string) => void
+  minLength?: number
 }
 
 export function useSearch(options: SearchOptions = {}) {
-  const { 
-    debounceDelay = 500,
-    onSearch
-  } = options
+  const { onSearch, minLength = 2 } = options
 
-  // Estados
+  const toast = useToast()
   const searchTerm = ref('')
-  const debouncedSearchTerm = ref('')
   const isSearching = ref(false)
-  
-  // Timeout para debounce
-  let debounceTimeout: number | null = null
 
-  // Limpar timeout de debounce se existir
-  const clearDebounceTimeout = () => {
-    if (debounceTimeout) {
-      clearTimeout(debounceTimeout)
-      debounceTimeout = null
+  const search = (value: string) => {
+    try {
+      if (onSearch && (value === '' || value.length >= minLength)) {
+        onSearch(value)
+      }
+    } catch (error) {
+      toast.error(
+        'Erro na busca',
+        'Ocorreu um erro ao processar a busca. Tente novamente com outros termos.',
+      )
+    } finally {
+      isSearching.value = false
     }
   }
 
-  // Função principal de busca com debounce
-  const handleSearch = (term: string) => {
-    // Atualiza o termo sendo exibido imediatamente para feedback
-    debouncedSearchTerm.value = term
-    
-    // Indica que a busca está em andamento para feedback visual
+  const handleSearch = (value: string) => {
+    if (value.length > 0 && value.length < minLength) {
+      toast.info(
+        'Termo de busca curto',
+        `Digite pelo menos ${minLength} caracteres para realizar a busca.`,
+      )
+      return
+    }
+
     isSearching.value = true
-    
-    // Cancela o temporizador anterior se existir
-    clearDebounceTimeout()
-    
-    // Configura novo temporizador
-    debounceTimeout = window.setTimeout(() => {
-      // Verifica se o termo mudou para evitar buscas desnecessárias
-      if (searchTerm.value === term) {
-        isSearching.value = false
-        return
-      }
-      
-      // Atualiza o termo de busca
-      searchTerm.value = term
-      
-      // Executa o callback de busca, se fornecido
-      if (onSearch) {
-        onSearch(term)
-      }
-      
-      // Fim da busca
-      debounceTimeout = null
-      isSearching.value = false
-    }, debounceDelay)
+    searchTerm.value = value
+    search(value)
   }
 
-  // Limpar busca
   const clearSearch = () => {
-    clearDebounceTimeout()
     searchTerm.value = ''
-    debouncedSearchTerm.value = ''
-    isSearching.value = false
-  }
-
-  // Limpeza de recursos
-  const dispose = () => {
-    clearDebounceTimeout()
   }
 
   return {
     searchTerm,
-    debouncedSearchTerm,
     isSearching,
     handleSearch,
     clearSearch,
-    dispose
   }
-} 
+}

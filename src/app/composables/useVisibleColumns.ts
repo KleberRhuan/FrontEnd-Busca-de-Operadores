@@ -23,7 +23,6 @@ export function useVisibleColumns(options: VisibleColumnsOptions = {}) {
     defaultColumns = []
   } = options
 
-  // Tenta carregar colunas do localStorage se persistKey fornecido
   const loadSavedColumns = (): Column[] => {
     if (!persistKey) return defaultColumns
     
@@ -31,9 +30,6 @@ export function useVisibleColumns(options: VisibleColumnsOptions = {}) {
       const saved = localStorage.getItem(`table-columns-${persistKey}`)
       if (saved) {
         const parsedColumns = JSON.parse(saved) as Column[]
-        
-        // Certifique-se de que todas as colunas padrão existam
-        // Isso é útil quando novas colunas são adicionadas após a persistência
         const mergedColumns = [...parsedColumns]
         
         defaultColumns.forEach(defaultCol => {
@@ -53,15 +49,12 @@ export function useVisibleColumns(options: VisibleColumnsOptions = {}) {
     return defaultColumns
   }
 
-  // Inicializa as colunas
   const columns = ref<Column[]>(loadSavedColumns())
 
-  // Calcula as colunas visíveis
   const visibleColumns = computed(() => 
     columns.value.filter(column => column.visible !== false)
   )
 
-  // Salva as configurações de colunas
   const saveColumns = () => {
     if (!persistKey) return
     
@@ -72,32 +65,26 @@ export function useVisibleColumns(options: VisibleColumnsOptions = {}) {
     }
   }
 
-  // Alterna a visibilidade de uma coluna
   const toggleColumnVisibility = (key: string) => {
     const columnIndex = columns.value.findIndex(col => col.key === key)
     
     if (columnIndex !== -1) {
-      // Cria uma nova referência para o objeto da coluna para manter a reatividade
       const updatedColumn = { ...columns.value[columnIndex] }
       updatedColumn.visible = updatedColumn.visible === false ? true : false
       
-      // Atualiza o array de colunas
       const updatedColumns = [...columns.value]
       updatedColumns[columnIndex] = updatedColumn
       columns.value = updatedColumns
       
-      // Persiste a alteração
       saveColumns()
     }
   }
 
-  // Define colunas iniciais ou redefine para os valores padrão
   const setColumns = (newColumns: Column[]) => {
     columns.value = newColumns
     saveColumns()
   }
 
-  // Redefine para as colunas padrão
   const resetToDefault = () => {
     columns.value = defaultColumns
     saveColumns()

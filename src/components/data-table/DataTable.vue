@@ -1,105 +1,81 @@
 <template>
-  <div class="w-full">
-    <TableControls 
-      :loading="isLoading" 
-      :search-term="searchTerm" 
-      @search="handleSearch" 
-      @update="refresh" 
+  <div>
+    <TableControls
+      v-model:search="searchTerm"
+      :is-searching="isLoading"
+      :is-loading="isLoading"
+      @refresh="refresh"
+      @search="handleSearch"
     />
 
     <TableContainer>
       <Table>
-        <template #header>
-          <TableHeaders 
-            :columns="visibleColumns" 
-            :sort-config="sortConfig" 
-            @sort="handleSort"
-          />
-        </template>
-        
-        <TableContent 
-          :items="items" 
-          :columns="visibleColumns" 
-          :loading="isLoading" 
+        <TableHeaders
+          :columns="visibleColumns"
+          :sort-params="sortParams"
+          @sort-field="handleSortFieldChange"
+          @sort-order="handleSortDirectionChange"
+          @toggle-order="toggleSortDirection"
+        />
+
+        <TableContent
+          :columns="visibleColumns"
+          :items="items"
+          :loading="isLoading"
           :empty="isEmpty"
+          :error="error"
+          :on-retry="refresh"
         />
       </Table>
     </TableContainer>
 
-    <PaginationControls 
-      v-if="!isEmpty" 
-      :pagination="pagination" 
-      @page-change="handlePageChange" 
-      @page-size-change="handlePageSizeChange" 
+    <PaginationControls
+      :pagination="pagination"
+      @page-change="handlePageChange"
+      @page-size-change="handlePageSizeChange"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-import { onUnmounted } from 'vue'
-import { Table } from '../ui/table/index'
-import TableControls from './TableControls.vue'
-import TableContainer from './TableContainer.vue'
-import TableHeaders from './TableHeaders.vue'
-import TableContent from './TableContent.vue'
-import PaginationControls from './PaginationControls.vue'
-import { useDataTable } from '../../app/composables/useDataTable'
-import type { ColumnDefinition } from '../../app/composables/useTableColumns'
+import {Table} from '@/components/ui/table'
+import TableControls from '@/components/data-table/TableControls.vue'
+import TableHeaders from '@/components/data-table/TableHeaders.vue'
+import TableContainer from '@/components/data-table/TableContainer.vue'
+import TableContent from '@/components/data-table/TableContent.vue'
+import PaginationControls from '@/components/data-table/PaginationControls.vue'
+import { useDataTable } from '@/app/composables/useDataTable.ts'
+import type { ColumnDefinition } from '@/app/types'
 
-// Props
-const props = defineProps({
-  fetchFn: {
-    type: Function as any,
-    required: true
-  },
-  columns: {
-    type: Array as any,
-    required: true
-  },
-  persistKey: {
-    type: String,
-    default: ''
-  },
-  defaultPageSize: {
-    type: Number,
-    default: 10
-  }
-})
+interface DataTableProps {
+  columns: ColumnDefinition[]
+  persistKey?: string
+  defaultPageSize?: number
+  globalDebounce?: number
+}
 
-// Composable com toda a lógica da tabela
+const props = defineProps<DataTableProps>()
+
 const {
-  // Estados
   items,
   visibleColumns,
   isEmpty,
   isLoading,
   searchTerm,
   pagination,
-  sortConfig,
-  
-  // Ações
-  handleSort,
+  sortParams,
   handlePageChange,
   handlePageSizeChange,
   handleSearch,
   refresh,
-  dispose
+  error,
+  handleSortFieldChange,
+  handleSortDirectionChange,
+  toggleSortDirection,
 } = useDataTable({
   columns: props.columns,
   persistKey: props.persistKey,
   defaultPageSize: props.defaultPageSize,
-  fetchFn: props.fetchFn
-})
-
-// Cleanup no unmount
-onUnmounted(() => {
-  dispose()
+  globalDebounce: props.globalDebounce,
 })
 </script>
-
-<style>
-/* Classes específicas para estilização da tabela */
-.cell-actions {
-  @apply flex justify-end items-center gap-2;
-}
-</style>

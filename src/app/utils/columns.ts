@@ -1,100 +1,100 @@
-import type { ColumnDefinition } from '@/app/composables/useTableColumns'
+import type { ColumnDefinition } from '@/app/types';
 
 export const columns: ColumnDefinition[] = [
   {
-    id: 'registration',
+    id: "operatorRegistry",
     title: 'Registro',
     sortable: true,
-    visible: true
+    visible: true,
   },
   {
-    id: 'cnpj',
+    id: "cnpj",
     title: 'CNPJ',
     sortable: true,
-    visible: true
+    visible: true,
   },
   {
-    id: 'businessName',
+    id: "corporateName",
     title: 'Razão Social',
     sortable: true,
-    visible: true
+    visible: true,
   },
   {
-    id: 'tradeName',
+    id: "tradeName",
     title: 'Nome Fantasia',
     sortable: true,
-    visible: true
+    visible: true,
   },
   {
-    id: 'modality',
+    id: "modality",
     title: 'Modalidade',
     sortable: true,
-    visible: true
+    visible: true,
   },
   {
-    id: 'street',
+    id: "street",
     title: 'Rua',
     sortable: true,
-    visible: false
+    visible: false,
   },
   {
-    id: 'number',
+    id: "number",
     title: 'Número',
     sortable: false,
-    visible: false
+    visible: false,
   },
   {
-    id: 'complement',
+    id: "complement",
     title: 'Complemento',
     sortable: false,
-    visible: false
+    visible: false,
   },
   {
-    id: 'neighborhood',
+    id: "neighborhood",
     title: 'Bairro',
     sortable: true,
-    visible: false
+    visible: false,
   },
   {
-    id: 'city',
+    id: "city",
     title: 'Cidade',
     sortable: true,
-    visible: true
+    visible: true,
   },
   {
-    id: 'state',
+    id: "state",
     title: 'Estado',
     sortable: true,
-    visible: true
+    visible: true,
   },
   {
-    id: 'postalCode',
+    id: "zip",
     title: 'CEP',
     sortable: false,
-    visible: false
+    visible: false,
   },
   {
-    id: 'phone',
+    id: "phone",
     title: 'Telefone',
     sortable: false,
-    visible: true
+    visible: true,
   },
   {
-    id: 'email',
+    id: "email",
     title: 'Email',
     sortable: true,
-    visible: true
+    visible: true,
   },
   {
-    id: 'representative',
+    id: "representative",
     title: 'Representante',
     sortable: true,
-    visible: true
+    visible: true,
   },
   {
-    id: 'registrationDate',
+    id: "registrationDate",
     title: 'Data de Registro',
     sortable: true,
-    visible: true
-  }
-]
+    visible: true,
+  },
+];

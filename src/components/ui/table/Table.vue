@@ -10,6 +10,7 @@ const props = defineProps<{
 <template>
   <div class="relative w-full overflow-auto">
     <table :class="cn('w-full caption-bottom text-sm', props.class)">
+      <slot name="header"></slot>
       <slot />
     </table>
   </div>

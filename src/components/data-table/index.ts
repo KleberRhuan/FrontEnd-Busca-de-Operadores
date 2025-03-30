@@ -1,0 +1,6 @@
+export * from './DataTable.vue'
+export * from './TableControls.vue'
+export * from './PaginationControls.vue'
+export * from './TableContainer.vue'
+export * from './TableHeaders.vue'
+export * from './TableContent.vue'
