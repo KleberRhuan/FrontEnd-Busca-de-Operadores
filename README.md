@@ -67,10 +67,6 @@ npm run preview
 
 ## Execução com Docker
 
-Para instruções detalhadas sobre a execução com Docker, consulte o arquivo [DOCKER.md](./DOCKER.md).
-
-Resumidamente:
-
 ```bash
 # Método 1: Usando o script de automatização
 chmod +x docker-build.sh
@@ -103,11 +99,6 @@ intuitive-care/
 ├── docker-build.sh        # Script para automatizar build do container
 └── ...
 ```
-
-## Documentação
-
-- [DEPLOY.md](./DEPLOY.md) - Instruções detalhadas para deploy em produção
-- [DOCKER.md](./DOCKER.md) - Guia para utilização com Docker
 
 ## Contribuição
 

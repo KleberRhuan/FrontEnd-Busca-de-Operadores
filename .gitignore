@@ -38,3 +38,48 @@ coverage
 *.tar
 *.tar.gz
 docker-compose.override.yml
+
+# Ambientes e configurações locais
+.idea/
+.vscode/
+
+# Arquivos temporários e de build
+dist/
+build/
+node_modules/
+coverage/
+
+# Arquivos sensíveis ou de exemplo
+.env
+.env.local
+
+# Docker
+docker-build.sh
+
+# IDEs
+.idea/
+.vscode/
+
+# Node
+node_modules/
+dist/
+build/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# Ambientes
+.env
+.env.local
+
+# Cobertura de testes
+coverage/
+
+# Arquivos temporários
+*.log
+*.tmp
+
+# Docker
+docker-build.sh
