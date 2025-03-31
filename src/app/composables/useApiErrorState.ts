@@ -35,9 +35,6 @@ function handleError(error: unknown, context: string): void {
 
   const errorObj = error instanceof Error ? error : new Error(String(error))
   const isAppError = 'type' in errorObj && 'userMessage' in errorObj
-
-  // Log no console com contexto
-  console.error(`[${context}] ${isAppError ? 'App Error' : 'Error'}:`, errorObj)
 }
 
 /**
