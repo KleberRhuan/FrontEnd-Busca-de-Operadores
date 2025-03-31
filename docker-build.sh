@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Nome da aplicação/imagem
-APP_NAME="intuitive-care"
+APP_NAME="intuitive-care-frontend"
 
 # Cores para output
 GREEN='\033[0;32m'
